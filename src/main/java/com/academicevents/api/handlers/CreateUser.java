@@ -15,7 +15,7 @@ public class CreateUser {
     public static void saveUser(User user) {
         Connection conn = DB.getConnection();
         String userType = user.getRole().getDisplayName();
-        String query = "INSERT INTO " + userType + " (cpf, password, role) " + "VALUES (?, ?, ?)";
+        String query = "INSERT INTO " + userType + " (cpf, senha, role) " + "VALUES (?, ?, ?)";
 
         try {
             PreparedStatement statement =  conn.prepareStatement(query);
