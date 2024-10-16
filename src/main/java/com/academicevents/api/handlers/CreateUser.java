@@ -15,21 +15,13 @@ public class CreateUser {
     public static void saveUser(User user) {
         Connection conn = DB.getConnection();
         String userType = user.getRole().getDisplayName();
-        String query = "INSERT INTO " + userType + " (cpf, nome, rua, numero, bairro, cidade, estado) " + "VALUES ( ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO " + userType + " (cpf, password, role) " + "VALUES (?, ?, ?)";
 
         try {
             PreparedStatement statement =  conn.prepareStatement(query);
             statement.setString(1, user.getCpf());
-            statement.setString(2, user.getName());
-            statement.setString(3, user.getEmail());
-            statement.setString(4, user.getPassword());
-            statement.setString(5, user.getRua());
-            statement.setString(6, user.getNumero());
-            statement.setString(7, user.getBairro());
-            statement.setString(8, user.getCidade());
-            statement.setString(9, user.getEstado());
-            statement.setString(10, user.getRole().getDisplayName());
-
+            statement.setString(2, user.getPassword());
+            statement.setString(3, user.getRole().getDisplayName());
             statement.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
