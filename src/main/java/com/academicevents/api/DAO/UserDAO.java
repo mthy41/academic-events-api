@@ -2,6 +2,7 @@ package com.academicevents.api.DAO;
 
 import com.academicevents.api.customerrors.UserAlreadyExistsError;
 import com.academicevents.api.models.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
@@ -13,6 +14,7 @@ import java.util.List;
 
 @Service
 public class UserDAO {
+    @Autowired
     static Connection conn = DB.getConnection();
 
     public static boolean searchUserByCpf(String cpf) {
