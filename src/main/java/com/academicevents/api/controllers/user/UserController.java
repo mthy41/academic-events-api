@@ -26,8 +26,7 @@ public class UserController {
 
     @PostMapping("/login")
     public User SingIn(@RequestBody Map<String, String> user){
-        // return userData.get("cpf");
-        LoginUser.searchUserByCpf(user);
+        boolean login = LoginUser.getUserByCpf(user);
         User teste = new User("matheus", "asdasd", "asdasd","asdasd","asdasd","asdasd","asdasd","asdasd","asdasd", ROLES.ADM);
         return teste;
     }
