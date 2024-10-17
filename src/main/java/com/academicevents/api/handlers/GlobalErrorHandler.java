@@ -6,10 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @ControllerAdvice
 public class GlobalErrorHandler {
-    @ExceptionHandler(UserAlreadyExistsError.class)
-    public ResponseEntity<?> handleUserAlreadyExistsError(UserAlreadyExistsError e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<Map<String, String>> handleUserAlreadyExistsError(UserAlreadyExistsError e) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", e.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);  // Use CONFLICT (409) para um erro de duplicidade
     }
 }
