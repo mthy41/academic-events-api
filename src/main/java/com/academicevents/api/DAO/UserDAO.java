@@ -1,5 +1,6 @@
 package com.academicevents.api.DAO;
 
+import com.academicevents.api.builders.UserFactory;
 import com.academicevents.api.customerrors.UserAlreadyExistsError;
 import com.academicevents.api.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserDAO {
@@ -52,5 +54,22 @@ public class UserDAO {
             throw new UserAlreadyExistsError("Usuario ja cadastrado");
         }
         return true;
+    }
+
+    public static Optional<? extends User> getUserByCpf(String cpf){
+        String admQuery = "SELECT * FROM administrador WHERE cpf = '"+cpf+"'";
+        String proQuery = "SELECT * FROM professor WHERE cpf = '"+cpf+"'";
+        String parQuery = "SELECT * FROM participante WHERE cpf = '"+cpf+"'";
+        List<String> queries = Arrays.asList(admQuery, proQuery, parQuery);
+
+        for(String query : queries){
+            try {
+                PreparedStatement statement = conn.prepareStatement(query);
+                ResultSet result = statement.executeQuery();
+                if(result.next()){
+                    return UserFactory.buildUser(result);
+                }
+            } catch (SQLException e ) {throw new RuntimeException(e);}
+        } return Optional.empty();
     }
 }
