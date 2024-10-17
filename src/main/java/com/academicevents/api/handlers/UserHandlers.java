@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Service
 @CrossOrigin(origins = "*")
-public class CreateUser {
+public class UserHandlers {
     public static boolean saveUser(User user) {
         if(!UserDAO.searchUserByCpf(user.getCpf())){
             return UserDAO.saveUser(user);
