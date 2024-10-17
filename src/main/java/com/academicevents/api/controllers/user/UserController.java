@@ -1,7 +1,7 @@
 package com.academicevents.api.controllers.user;
 
 import com.academicevents.api.enums.ROLES;
-import com.academicevents.api.handlers.CreateUser;
+import com.academicevents.api.handlers.UserHandlers;
 import com.academicevents.api.handlers.LoginUser;
 import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ public class UserController {
 
     @PostMapping("/create/user")
     public ResponseEntity<?> SignUp(@RequestBody User user) {
-        if(CreateUser.saveUser(user)) {
+        if(UserHandlers.saveUser(user)) {
             Map<String, String> response = new HashMap<>();
             response.put("success", "Usuário cadastrado com sucesso!");
             return new ResponseEntity<>(response, HttpStatus.OK);
