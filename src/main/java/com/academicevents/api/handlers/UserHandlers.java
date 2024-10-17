@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 public class UserHandlers {
     public static boolean saveUser(User user) {
         if(!UserDAO.searchUserByCpf(user.getCpf())){
+            user.setPassword(HashPasswordHandler.hashPassword(user.getPassword()));
             return UserDAO.saveUser(user);
         } else {
             throw new UserAlreadyExistsError("Usuario ja cadastrado");
