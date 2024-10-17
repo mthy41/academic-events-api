@@ -1,6 +1,8 @@
 package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.DB;
+import com.academicevents.api.DAO.UserDAO;
+import com.academicevents.api.customerrors.UserAlreadyExistsError;
 import com.academicevents.api.models.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,7 +18,6 @@ public class CreateUser {
         Connection conn = DB.getConnection();
         String userType = user.getRole().getDisplayName();
         String query = "INSERT INTO " + userType + " (cpf, senha, role) " + "VALUES (?, ?, ?)";
-
         try {
             PreparedStatement statement =  conn.prepareStatement(query);
             statement.setString(1, user.getCpf());
@@ -24,7 +25,7 @@ public class CreateUser {
             statement.setString(3, user.getRole().getDisplayName());
             statement.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new UserAlreadyExistsError("Usuario ja cadastrado");
         }
     }
 }
