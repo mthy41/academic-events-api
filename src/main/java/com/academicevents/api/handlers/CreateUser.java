@@ -16,16 +16,8 @@ import java.sql.SQLException;
 public class CreateUser {
     public static void saveUser(User user) {
         Connection conn = DB.getConnection();
-        String userType = user.getRole().getDisplayName();
-        String query = "INSERT INTO " + userType + " (cpf, senha, role) " + "VALUES (?, ?, ?)";
-        try {
-            PreparedStatement statement =  conn.prepareStatement(query);
-            statement.setString(1, user.getCpf());
-            statement.setString(2, user.getPassword());
-            statement.setString(3, user.getRole().getDisplayName());
-            statement.execute();
-        } catch (SQLException e) {
-            throw new UserAlreadyExistsError("Usuario ja cadastrado");
+        if(!UserDAO.searchUserByCpf(user.getCpf())){
+            UserDAO.saveUser(user);
         }
     }
 }
