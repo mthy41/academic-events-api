@@ -17,4 +17,11 @@ public class UserHandlers {
             throw new UserAlreadyExistsError("Usuario ja cadastrado");
         }
     }
+
+    public static boolean deleteUser(String cpf) {
+        if (UserDAO.searchUserByCpf(cpf))    {
+            return UserDAO.deleteUser(cpf);
+        }
+        return false;
+    }
 }

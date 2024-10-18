@@ -71,4 +71,16 @@ public class EventDAO {
         }
         return 0;
     }
+
+    public static boolean deleteEvent(String nome) {
+        String query = "DELETE FROM evento WHERE nome = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, nome);
+            statement.execute();
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+        return true;
+    }
 }

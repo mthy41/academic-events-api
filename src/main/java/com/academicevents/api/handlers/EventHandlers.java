@@ -2,6 +2,7 @@ package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.EventDAO;
 import com.academicevents.api.customerrors.EventAlreadyExistsError;
+import com.academicevents.api.customerrors.EventNotExistsError;
 import com.academicevents.api.models.Event;
 import org.springframework.stereotype.Service;
 
@@ -15,5 +16,11 @@ public class EventHandlers {
        }
     }
 
-
+    public static boolean deleteEvent(String nome) {
+        if(EventDAO.searchEventByName(nome)) {
+            return EventDAO.deleteEvent(nome);
+        } else {
+            throw new EventNotExistsError("Evento inexistente.");
+        }
+    }
 }
