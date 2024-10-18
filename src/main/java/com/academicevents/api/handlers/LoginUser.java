@@ -15,7 +15,9 @@ public class LoginUser {
             throw new WrongCredentialsError("Credenciais erradas ou invalidas");
         } else { bufferedUser = UserDAO.getUserByCpf(user.get("cpf")); }
 
-        if(!bufferedUser.map(User::getPassword).orElseThrow().equals(HashPasswordHandler.hashPassword(user.get("password")))){
+        if(!bufferedUser.map(User::getPassword)
+                .orElseThrow()
+                .equals(HashPasswordHandler.hashPassword(user.get("password")))){
             throw new WrongCredentialsError("Credenciais erradas ou invalidas");
         }
         System.out.println("deu certo");
