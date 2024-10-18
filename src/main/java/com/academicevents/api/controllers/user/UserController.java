@@ -2,7 +2,6 @@ package com.academicevents.api.controllers.user;
 
 import com.academicevents.api.enums.ROLES;
 import com.academicevents.api.handlers.UserHandlers;
-import com.academicevents.api.handlers.LoginUser;
 import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class UserController {
 
     @PostMapping("/login")
     public User SingIn(@RequestBody Map<String, String> user){
-        boolean login = LoginUser.getUserByCpf(user);
+        boolean login = UserHandlers.getUserByCpf(user);
         User teste = new User("matheus", "asdasd", "asdasd","asdasd","asdasd","asdasd","asdasd","asdasd","asdasd", ROLES.ADM);
         return teste;
     }
