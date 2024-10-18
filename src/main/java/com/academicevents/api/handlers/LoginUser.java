@@ -20,7 +20,6 @@ public class LoginUser {
                 .equals(HashPasswordHandler.hashPassword(user.get("password")))){
             throw new WrongCredentialsError("Credenciais erradas ou invalidas");
         }
-        System.out.println("deu certo");
         return true;
     }
 }
