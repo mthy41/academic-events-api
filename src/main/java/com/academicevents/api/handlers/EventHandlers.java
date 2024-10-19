@@ -23,4 +23,12 @@ public class EventHandlers {
             throw new EventNotExistsError("Evento inexistente.");
         }
     }
+
+    public static Event getEventbyName(String nome) {
+        if(EventDAO.searchEventByName(nome)) {
+            return EventDAO.getEventByName(nome);
+        } else {
+            throw new EventNotExistsError("Evento inexistente.");
+        }
+    }
 }

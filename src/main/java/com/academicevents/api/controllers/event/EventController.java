@@ -24,6 +24,19 @@ public class EventController {
         return new ResponseEntity<>("Problema no cadastro.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @PostMapping("get/event")
+    public ResponseEntity<?> getEventbyName(@RequestBody Map<String, String> event) {
+        try {
+            Map<String, Event> responseOK = new HashMap<>();
+            responseOK.put("event", EventHandlers.getEventbyName(event.get("nome")));
+            return new ResponseEntity<>(responseOK, HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, String> responseError = new HashMap<>();
+            responseError.put("error", e.getMessage());
+            return new ResponseEntity<>(responseError, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @DeleteMapping("/delete/event")
     public ResponseEntity<?> deleteEvent(@RequestBody Map<String, String> event) {
         Map<String, String> response = new HashMap<>();

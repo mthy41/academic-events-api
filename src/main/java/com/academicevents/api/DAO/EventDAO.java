@@ -83,4 +83,28 @@ public class EventDAO {
         }
         return true;
     }
+
+    public static Event getEventByName(String nome) {
+        String query = "SELECT * FROM evento WHERE nome = ?";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, nome);
+            ResultSet result = statement.executeQuery();
+            if(result.next()) {
+                return new Event(
+                        result.getString("nome"),
+                        result.getString("instituicao"),
+                        result.getDate("datainicio"),
+                        result.getDate("datafim"),
+                        result.getString("rua"),
+                        result.getString("numero"),
+                        result.getString("bairro"),
+                        result.getString("cidade"),
+                        result.getString("estado"));
+            }
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }
