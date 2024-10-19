@@ -6,6 +6,8 @@ import com.academicevents.api.customerrors.EventNotExistsError;
 import com.academicevents.api.models.Event;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class EventHandlers {
     public static boolean saveEvent(Event event) {
@@ -30,5 +32,9 @@ public class EventHandlers {
         } else {
             throw new EventNotExistsError("Evento inexistente.");
         }
+    }
+
+    public static ArrayList<Event> listEvents() {
+        return EventDAO.listEvents();
     }
 }

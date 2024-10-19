@@ -4,11 +4,9 @@ import com.academicevents.api.handlers.EventHandlers;
 import com.academicevents.api.models.Event;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,6 +27,19 @@ public class EventController {
         try {
             Map<String, Event> responseOK = new HashMap<>();
             responseOK.put("event", EventHandlers.getEventbyName(event.get("nome")));
+            return new ResponseEntity<>(responseOK, HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, String> responseError = new HashMap<>();
+            responseError.put("error", e.getMessage());
+            return new ResponseEntity<>(responseError, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/get/listevents")
+    public ResponseEntity<?> listEvents() {
+        try {
+            Map<String, ArrayList<Event>> responseOK = new HashMap<>();
+            responseOK.put("events", EventHandlers.listEvents());
             return new ResponseEntity<>(responseOK, HttpStatus.OK);
         } catch (Exception e) {
             Map<String, String> responseError = new HashMap<>();

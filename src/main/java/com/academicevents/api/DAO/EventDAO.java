@@ -1,5 +1,6 @@
 package com.academicevents.api.DAO;
 
+import com.academicevents.api.customerrors.ListingEventsError;
 import com.academicevents.api.models.Event;
 import com.academicevents.api.models.PresenceList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 @Service
 public class EventDAO {
@@ -106,5 +108,29 @@ public class EventDAO {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    public static ArrayList<Event> listEvents() {
+        String query = "SELECT * FROM evento";
+        ArrayList<Event> events = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            ResultSet result = statement.executeQuery();
+            while(result.next()) {
+                events.add(new Event(
+                        result.getString("nome"),
+                        result.getString("instituicao"),
+                        result.getDate("datainicio"),
+                        result.getDate("datafim"),
+                        result.getString("rua"),
+                        result.getString("numero"),
+                        result.getString("bairro"),
+                        result.getString("cidade"),
+                        result.getString("estado")));
+            }
+        } catch (SQLException e ) {
+            throw new ListingEventsError("Erro na listagem dos eventos");
+        }
+        return events;
     }
 }
