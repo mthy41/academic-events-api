@@ -1,7 +1,6 @@
 package com.academicevents.api.DAO;
 
 import com.academicevents.api.builders.UserFactory;
-import com.academicevents.api.customerrors.UserAlreadyExistsError;
 import com.academicevents.api.customerrors.UserNotFoundError;
 import com.academicevents.api.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +58,7 @@ public class UserDAO {
             statement.setString(10, user.getRole().getDisplayName());
             statement.execute();
         } catch (SQLException e) {
-            throw new UserAlreadyExistsError("Usuario ja cadastrado");
+            return false;
         }
         return true;
     }

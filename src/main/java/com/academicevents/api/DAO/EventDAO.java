@@ -39,7 +39,6 @@ public class EventDAO {
 
             statement.execute();
 
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

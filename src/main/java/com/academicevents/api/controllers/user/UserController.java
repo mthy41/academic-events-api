@@ -38,7 +38,7 @@ public class UserController {
             response.put("success", "Usuário cadastrado com sucesso!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        response.put("error", "Erro ao cadastrar o usuaário");
+        response.put("error", "Erro ao cadastrar o usuário");
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
