@@ -21,14 +21,7 @@ public class UserController {
     public ResponseEntity<?> SingIn(@RequestBody @Schema(description = "CPF e senha do usuario", example = "{\"cpf\": \"12345678900\", \"password\": \"123456\"}")
                 Map<String, String> user) {
         Map<String, String> response = new HashMap<>();
-        boolean login = LoginUser.getUserByCpf(user);
-        if (login) {
-            response.put("success", "Usuário logado com sucesso!");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            response.put("error", "Erro ao logar o usuaário");
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return login = LoginUser.getUserByCpf(user);
     }
 
     @PostMapping("/create/user")
