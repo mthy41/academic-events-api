@@ -34,12 +34,7 @@ public class UserController {
     @PostMapping("/create/user")
     public ResponseEntity<?> SignUp(@RequestBody User user) {
         Map<String, String> response = new HashMap<>();
-        if(UserHandlers.saveUser(user)) {
-            response.put("success", "Usuário cadastrado com sucesso!");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        response.put("error", "Erro ao cadastrar o usuário");
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return UserHandlers.saveUser(user);
     }
 
     @DeleteMapping("/delete/user")
