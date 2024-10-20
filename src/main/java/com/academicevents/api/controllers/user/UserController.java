@@ -33,7 +33,6 @@ public class UserController {
 
     @PostMapping("/create/user")
     public ResponseEntity<?> SignUp(@RequestBody User user) {
-        Map<String, String> response = new HashMap<>();
         return UserHandlers.saveUser(user);
     }
 

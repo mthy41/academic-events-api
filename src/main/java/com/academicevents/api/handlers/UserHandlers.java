@@ -14,11 +14,9 @@ public class UserHandlers {
         ResponseEntity<?> response = null;
         if(!UserDAO.searchUserByCpf(user.getCpf())){
             user.setPassword(HashPasswordHandler.hashPassword(user.getPassword()));
-            if (UserDAO.saveUser(user)) {
-                response = new ResponseEntity<>("Usuaário criado com sucesso!", HttpStatus.OK);
-            } else {
-                response = new ResponseEntity<>("Usuário ja existe.", HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            response = new ResponseEntity<>("Usuaário criado com sucesso!", HttpStatus.OK);
+        } else {
+            response = new ResponseEntity<>("Usuário ja existe.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return response;
     }
