@@ -1,4 +1,4 @@
-package com.academicevents.api.webconfig;
+package com.academicevents.api.WebConfig;
 
 
 import org.springframework.context.annotation.Configuration;
