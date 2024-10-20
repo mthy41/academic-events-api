@@ -1,6 +1,7 @@
 package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.UserDAO;
+import com.academicevents.api.customerrors.UserAlreadyExistsError;
 import com.academicevents.api.models.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,7 +14,7 @@ public class UserHandlers {
             user.setPassword(HashPasswordHandler.hashPassword(user.getPassword()));
             return UserDAO.saveUser(user);
         } else {
-            return false;
+            throw new UserAlreadyExistsError("Usuário ja cadastrado");
         }
     }
 
