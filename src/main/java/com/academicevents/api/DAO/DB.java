@@ -7,14 +7,22 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Properties;
 
 @Service
 public class DB {
+    private static ArrayList<Connection> connections = new ArrayList<>();
     private static Connection conn = null;
 
     public static Connection getConnection() {
         try {
+            for (Connection c : connections) {
+                if (c != null && !c.isClosed() && connections.size() < 10) {
+                    return c;
+                }
+            }
+
             if(conn == null || conn.isClosed()) {
                 Properties props = loadProperties();
                 String url = props.getProperty("spring.datasource.url");
@@ -23,6 +31,7 @@ public class DB {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        connections.add(conn);
         return conn;
     }
 
