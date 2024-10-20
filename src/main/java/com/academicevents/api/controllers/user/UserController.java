@@ -4,7 +4,6 @@ import com.academicevents.api.handlers.LoginUser;
 import com.academicevents.api.handlers.UserHandlers;
 import com.academicevents.api.models.User;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +20,7 @@ public class UserController {
     public ResponseEntity<?> SingIn(@RequestBody @Schema(description = "CPF e senha do usuario", example = "{\"cpf\": \"12345678900\", \"password\": \"123456\"}")
                 Map<String, String> user) {
         Map<String, String> response = new HashMap<>();
-        return login = LoginUser.getUserByCpf(user);
+        return LoginUser.getUserByCpf(user);
     }
 
     @PostMapping("/create/user")
