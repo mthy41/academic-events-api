@@ -7,18 +7,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 @CrossOrigin(origins = "*")
 public class UserHandlers {
     public static ResponseEntity<?> saveUser(User user) {
-        ResponseEntity<?> response = null;
+        Map<String, String> response = new HashMap<>();
+
         if(!UserDAO.searchUserByCpf(user.getCpf())){
             user.setPassword(HashPasswordHandler.hashPassword(user.getPassword()));
-            response = new ResponseEntity<>("Usuaário criado com sucesso!", HttpStatus.OK);
-        } else {
-            response = new ResponseEntity<>("Usuário ja existe.", HttpStatus.INTERNAL_SERVER_ERROR);
+            response.put("success", "Usuaário criado com sucesso!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return response;
+        response.put("error", "Usuaário já existente");
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
     public static boolean deleteUser(String cpf) {
