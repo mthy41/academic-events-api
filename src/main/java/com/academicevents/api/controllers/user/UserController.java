@@ -37,17 +37,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/user")
-    public ResponseEntity<Map<String, String>> deleteUser(
-            @RequestBody @Schema(description = "CPF do usuário para ser deletado.", example ="{\"cpf\": \"12345678900\"}")
-            Map<String, String> user) {
-        Map<String, String> response = new HashMap<>();
-
-        if (UserHandlers.deleteUser(user.get("cpf"))) {
-            response.put("success", "Usuário deletado com sucesso!");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } else {
-            response.put("error", "Erro ao deletar o usuário");
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<?> deleteUser(@RequestBody @Schema(description = "CPF do usuário para ser deletado.", example ="{\"cpf\": \"12345678900\"}") Map<String, String> user) {
+        return UserHandlers.deleteUser(user.get("cpf"));
     }
 }

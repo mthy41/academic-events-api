@@ -25,10 +25,13 @@ public class UserHandlers {
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
-    public static boolean deleteUser(String cpf) {
-        if (UserDAO.searchUserByCpf(cpf))    {
-            return UserDAO.deleteUser(cpf);
+    public static ResponseEntity<?> deleteUser(String cpf) {
+        Map<String, String> response = new HashMap<>();
+        if (UserDAO.searchUserByCpf(cpf) && UserDAO.deleteUser(cpf))    {
+            response.put("success", "Usuário deletado com sucesso!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
-        return false;
+        response.put("error", "Erro ao deletar o usuário");
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
