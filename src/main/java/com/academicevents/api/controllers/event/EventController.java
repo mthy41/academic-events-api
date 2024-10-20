@@ -2,6 +2,7 @@ package com.academicevents.api.controllers.event;
 
 import com.academicevents.api.handlers.EventHandlers;
 import com.academicevents.api.models.Event;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,9 @@ public class EventController {
     }
 
     @PostMapping("get/event")
-    public ResponseEntity<?> getEventbyName(@RequestBody Map<String, String> event) {
+    public ResponseEntity<?> getEventbyName(@RequestBody
+                                                @Schema(description = "Nome do evento", example = "{\"nome\": \"Nome do evento\"}")
+                                                Map<String, String> event) {
         try {
             Map<String, Event> responseOK = new HashMap<>();
             responseOK.put("event", EventHandlers.getEventbyName(event.get("nome")));
@@ -49,7 +52,9 @@ public class EventController {
     }
 
     @DeleteMapping("/delete/event")
-    public ResponseEntity<?> deleteEvent(@RequestBody Map<String, String> event) {
+    public ResponseEntity<?> deleteEvent(@RequestBody
+                                             @Schema(description = "Nome do evento", example = "{\"nome\": \"Nome do evento\"}")
+                                             Map<String, String> event) {
         Map<String, String> response = new HashMap<>();
         if(EventHandlers.deleteEvent(event.get("nome"))) {
             response.put("success", "Evento deletado com sucesso!");
