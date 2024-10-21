@@ -16,7 +16,7 @@ public class UserHandlers {
     public static ResponseEntity<?> saveUser(User user) {
         Map<String, String> response = new HashMap<>();
 
-        if(!UserDAO.searchUserByCpf(user.getCpf()) && !UserDAO.saveUser(user)) {
+        if(!UserDAO.searchUserByCpf(user.getCpf()) && UserDAO.saveUser(user)) {
             user.setPassword(HashPasswordHandler.hashPassword(user.getPassword()));
             response.put("success", "Usuaário criado com sucesso!");
             return new ResponseEntity<>(response, HttpStatus.OK);

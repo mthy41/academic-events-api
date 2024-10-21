@@ -59,7 +59,8 @@ public class UserDAO {
             statement.setString(10, user.getRole().getDisplayName());
             statement.execute();
         } catch (SQLException e) {
-            return false;
+            throw new RuntimeException(e);
+//            return false;
         }
         return true;
     }
