@@ -5,6 +5,7 @@ import com.academicevents.api.enums.ROLES;
 public class User {
     public String nome;
     public String email;
+    public String foto;
     public String password;
     public String cpf;
     public String rua;
@@ -14,7 +15,7 @@ public class User {
     public String estado;
     public ROLES role;
 
-    public User(String nome, String email, String password, String cpf, String rua, String numero, String bairro, String cidade, String estado, ROLES role) {
+    public User(String nome, String foto, String email, String password, String cpf, String rua, String numero, String bairro, String cidade, String estado, ROLES role) {
         this.nome = nome;
         this.email = email;
         this.password = password;
@@ -25,10 +26,19 @@ public class User {
         this.cidade = cidade;
         this.estado = estado;
         this.role = role;
+        this.foto = foto;
     }
 
     public String getNome() {
         return nome;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
     }
 
     public void setNome(String name) {

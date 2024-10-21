@@ -43,10 +43,11 @@ public class UserDAO {
         Connection conn = DB.getConnection();
 
         String userType = user.getRole().getDisplayName();
-        String query = "INSERT INTO " + userType + " (cpf, nome, email, senha, rua, numero, bairro, cidade, estado, role) " + "VALUES (?, ?, ?,?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO " + userType + " (cpf, foto, nome, email, senha, rua, numero, bairro, cidade, estado, role) " + "VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?)";
         try {
             PreparedStatement statement =  conn.prepareStatement(query);
             statement.setString(1, user.getCpf());
+            statement.setString(2, user.getFoto());
             statement.setString(2, user.getNome());
             statement.setString(3, user.getEmail());
             statement.setString(4, user.getPassword());

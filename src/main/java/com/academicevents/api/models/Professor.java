@@ -6,6 +6,7 @@ public class Professor extends User {
     public Professor(
             String name,
             String email,
+            String foto,
             String password,
             String cpf,
             String rua,
@@ -14,6 +15,6 @@ public class Professor extends User {
             String cidade,
             String estado,
             ROLES role) {
-        super(name, email, password, cpf, rua, numero, bairro, cidade, estado, role);
+        super(name, foto, email, password, cpf, rua, numero, bairro, cidade, estado, role);
     }
 }
