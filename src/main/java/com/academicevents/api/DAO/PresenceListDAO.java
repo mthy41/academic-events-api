@@ -27,7 +27,7 @@ public class PresenceListDAO {
     }
 
     public static int getPresenceListLastId() {
-        String query = "SELECT codigo FROM listapresenca ORDER BY codigo DESC LIMIT 1";
+        String query = "SELECT codigo FROM lpevento ORDER BY codigo DESC LIMIT 1";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             ResultSet result = statement.executeQuery();
