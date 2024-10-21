@@ -22,7 +22,7 @@ public class EventDAO {
         int presenceListNextCod = PresenceListDAO.getPresenceListLastId() + 1;
         PresenceList presenceList = new PresenceList(String.valueOf(presenceListNextCod));
         PresenceListDAO.savePresenceList(presenceList);
-        String query = "INSERT INTO evento (codigo, codigo_listapresenca, nome, datainicio, datafim, instituicao, rua, numero, bairro, cidade, estado) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO evento (codigo, lpevento, nome, datainicio, datafim, instituicao, rua, numero, bairro, cidade, estado) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, String.valueOf(eventNextCod));
