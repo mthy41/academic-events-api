@@ -15,7 +15,7 @@ public class PresenceListDAO {
     static Connection conn = DB.getConnection();
 
     public static boolean savePresenceList(PresenceList list) {
-        String query = "INSERT INTO listapresenca (codigo) VALUES (?)";
+        String query = "INSERT INTO lpevento (codigo) VALUES (?)";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, list.cod);
