@@ -1,9 +1,10 @@
 package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.EventDAO;
+import com.academicevents.api.DTO.event.Event;
 import com.academicevents.api.DTO.event.SearchEvent;
 import com.academicevents.api.customerrors.EventNotExistsError;
-import com.academicevents.api.models.Event;
+import com.academicevents.api.models.PresenceList;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class EventHandlers {
@@ -19,6 +21,9 @@ public class EventHandlers {
             return new ResponseEntity<>("Erro ao criar o evento. Evento já existente.", HttpStatus.BAD_REQUEST);
         }
         if (EventDAO.saveEvent(event)) {
+            String presenceListCode = UUID.randomUUID().toString();
+            String eventCode = EventDAO.searchCodeByName(event.getNome());
+            PresenceList presenceList = new PresenceList(presenceListCode, eventCode);
             return new ResponseEntity<>("Evento criado com sucesso!", HttpStatus.OK);
         }
         return new ResponseEntity<>("Erro ao criar o evento.", HttpStatus.INTERNAL_SERVER_ERROR);

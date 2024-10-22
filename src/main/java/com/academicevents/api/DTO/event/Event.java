@@ -1,4 +1,4 @@
-package com.academicevents.api.models;
+package com.academicevents.api.DTO.event;
 
 import java.sql.Date;
 

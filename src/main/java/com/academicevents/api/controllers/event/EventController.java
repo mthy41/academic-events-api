@@ -2,13 +2,12 @@ package com.academicevents.api.controllers.event;
 
 import com.academicevents.api.DTO.event.SearchEvent;
 import com.academicevents.api.handlers.EventHandlers;
-import com.academicevents.api.models.Event;
+import com.academicevents.api.DTO.event.Event;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

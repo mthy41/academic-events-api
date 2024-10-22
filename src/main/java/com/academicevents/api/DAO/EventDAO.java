@@ -1,7 +1,7 @@
 package com.academicevents.api.DAO;
 
 import com.academicevents.api.customerrors.ListingEventsError;
-import com.academicevents.api.models.Event;
+import com.academicevents.api.DTO.event.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,9 +19,7 @@ public class EventDAO {
 
     public static boolean saveEvent(Event event) {
         String uuid = UUID.randomUUID().toString();
-        String uuid2 = UUID.randomUUID().toString();
 
-        String queryListaPresenca = "INSERT INTO lpevento (codigo, codigo_evento) VALUES (?,?)";
         String queryEvento = "INSERT INTO evento (codigo, nome, datainicio, datafim, instituicao, rua, numero, bairro, cidade, estado) VALUES (?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement statement = connection.prepareStatement(queryEvento);
@@ -38,12 +36,6 @@ public class EventDAO {
             statement.setString(10, event.getEstado());
 
             statement.execute();
-
-            PreparedStatement statement2 = connection.prepareStatement(queryListaPresenca);
-            statement2.setString(1, uuid2);
-            statement2.setString(2, uuid);
-            statement2.execute();
-
         } catch (SQLException e) {
             return false;
         }
@@ -62,6 +54,22 @@ public class EventDAO {
             throw new RuntimeException(e);
         }
         return searchResult;
+    }
+
+    public static String searchCodeByName(String name) {
+        String query = "SELECT codigo FROM evento WHERE nome = ?";
+
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1, name);
+            ResultSet result = statement.executeQuery();
+            if(result.next()) {
+                return result.getString("codigo");
+            }
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
     public static int getEventLastId() {
