@@ -7,6 +7,7 @@ import com.academicevents.api.models.User;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import javax.xml.crypto.Data;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,5 +35,16 @@ public class UserHandlers {
             throw new WrongCredentialsError("Credenciais erradas ou invalidas");
         }
         return true;
+    }
+
+    public static boolean updateUserByCpf(String userCpf, Map<String, String> attributesPackage){
+        if(!UserDAO.searchUserByCpf(userCpf)) { return false; }
+
+        if(attributesPackage.containsKey("nome")){
+            String userName = attributesPackage.get("nome");
+            if(!DataComplianceHandler.checkUserName(userName)){ return false; }
+        }
+
+        return false;
     }
 }

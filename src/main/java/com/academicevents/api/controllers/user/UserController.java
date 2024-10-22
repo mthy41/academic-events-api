@@ -24,9 +24,10 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public User SingIn(@RequestBody Map<String, String> user){
-        boolean login = UserHandlers.getUserByCpf(user);
-        User teste = new User("matheus", "asdasd", "asdasd","asdasd","asdasd","asdasd","asdasd","asdasd","asdasd", ROLES.ADM);
-        return teste;
+    public ResponseEntity<?> SingIn(@RequestBody Map<String, String> user){
+        if(UserHandlers.getUserByCpf(user)){
+            return new ResponseEntity<>("Usuário logado com sucesso!", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Erro ao fazer login", HttpStatus.UNAUTHORIZED);
     }
 }

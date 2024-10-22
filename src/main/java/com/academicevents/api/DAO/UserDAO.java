@@ -10,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -71,5 +72,16 @@ public class UserDAO {
                 }
             } catch (SQLException e ) {throw new RuntimeException(e);}
         } return Optional.empty();
+    }
+
+    public static boolean changeUserName(String userCpf, String newName){
+        if(!searchUserByCpf(userCpf)){ return false; }
+        String userType = getUserByCpf(userCpf).orElseThrow().getRole().getDisplayName();
+        String query = "UPDATE "+userType+" SET nome = "+newName;
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.execute();
+        } catch (SQLException e) {throw new RuntimeException(e);}
+        return true;
     }
 }
