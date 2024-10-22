@@ -3,8 +3,9 @@ package com.academicevents.api.models;
 import com.academicevents.api.enums.ROLES;
 
 public class User {
-    public String name;
+    public String nome;
     public String email;
+    public String foto;
     public String password;
     public String cpf;
     public String rua;
@@ -14,8 +15,8 @@ public class User {
     public String estado;
     public ROLES role;
 
-    public User(String name, String email, String password, String cpf, String rua, String numero, String bairro, String cidade, String estado, ROLES role) {
-        this.name = name;
+    public User(String nome, String foto, String email, String password, String cpf, String rua, String numero, String bairro, String cidade, String estado, ROLES role) {
+        this.nome = nome;
         this.email = email;
         this.password = password;
         this.cpf = cpf;
@@ -25,14 +26,23 @@ public class User {
         this.cidade = cidade;
         this.estado = estado;
         this.role = role;
+        this.foto = foto;
     }
 
-    public String getName() {
-        return name;
+    public String getNome() {
+        return nome;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    public void setNome(String name) {
+        this.nome = name;
     }
 
     public String getEmail() {
@@ -110,7 +120,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "name='" + name + '\'' +
+                "name='" + nome + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", cpf='" + cpf + '\'' +

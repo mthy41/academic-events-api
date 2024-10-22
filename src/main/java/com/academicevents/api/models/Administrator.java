@@ -5,6 +5,7 @@ import com.academicevents.api.enums.ROLES;
 public class Administrator extends User {
     public Administrator(
             String name,
+            String foto,
             String email,
             String password,
             String cpf,
@@ -14,6 +15,6 @@ public class Administrator extends User {
             String cidade,
             String estado,
             ROLES role) {
-        super(name, email, password, cpf, rua, numero, bairro, cidade, estado, role);
+            super(name, foto, email, password, cpf, rua, numero, bairro, cidade, estado, role);
     }
 }

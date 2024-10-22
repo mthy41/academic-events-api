@@ -15,19 +15,21 @@ public class PresenceListDAO {
     static Connection conn = DB.getConnection();
 
     public static boolean savePresenceList(PresenceList list) {
-        String query = "INSERT INTO listapresenca (codigo) VALUES (?)";
+        String query = "INSERT INTO lpevento (codigo, codigo_evento) VALUES (?, ?)";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, list.cod);
+            statement.setString(1, list.getCod());
+            statement.setString(2, list.getCodEvento());
             statement.execute();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            System.err.println(e.getMessage());
+            return false;
         }
         return true;
     }
 
     public static int getPresenceListLastId() {
-        String query = "SELECT codigo FROM listapresenca ORDER BY codigo DESC LIMIT 1";
+        String query = "SELECT codigo FROM lpevento ORDER BY codigo DESC LIMIT 1";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             ResultSet result = statement.executeQuery();

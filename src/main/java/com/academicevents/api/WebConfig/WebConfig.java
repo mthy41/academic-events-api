@@ -1,4 +1,4 @@
-package com.academicevents.api.webconfig;
+package com.academicevents.api.WebConfig;
 
 
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +11,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")  // Setar as configurações para todas as rotas
                 .allowedOrigins("*") // Adicione a origem permitida
-                .allowedMethods("GET", "POST") // Métodos permitidos
+                .allowedMethods("GET", "POST", "PUT", "DELETE") // Métodos permitidos
                 .allowedHeaders("*"); // Cabeçalhos permitidos
     }
 }

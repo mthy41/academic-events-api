@@ -19,6 +19,7 @@ public class UserFactory {
             return switch (userRoleStr) {
                 case "administrador" -> Optional.of(new Administrator(
                         userSet.getString("nome"),
+                        userSet.getString("foto"),
                         userSet.getString("email"),
                         userSet.getString("senha"),
                         userSet.getString("cpf"),
@@ -31,6 +32,7 @@ public class UserFactory {
                 ));
                 case "participante" -> Optional.of(new Participant(
                         userSet.getString("nome"),
+                        userSet.getString("foto"),
                         userSet.getString("email"),
                         userSet.getString("senha"),
                         userSet.getString("cpf"),
@@ -43,6 +45,7 @@ public class UserFactory {
                 ));
                 case "professor" -> Optional.of(new Professor(
                         userSet.getString("nome"),
+                        userSet.getString("foto"),
                         userSet.getString("email"),
                         userSet.getString("senha"),
                         userSet.getString("cpf"),
