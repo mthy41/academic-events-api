@@ -2,7 +2,6 @@ package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.UserDAO;
 import com.academicevents.api.DTO.user.DeleteUserDTO;
-import com.academicevents.api.customerrors.UserAlreadyExistsError;
 import com.academicevents.api.customerrors.WrongCredentialsError;
 import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
@@ -10,12 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import javax.xml.crypto.Data;
 import java.util.Map;
 import java.util.Optional;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @Service
 @CrossOrigin(origins = "*")
