@@ -1,5 +1,6 @@
 package com.academicevents.api.controllers.event;
 
+import com.academicevents.api.DTO.event.SearchEvent;
 import com.academicevents.api.handlers.EventHandlers;
 import com.academicevents.api.models.Event;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -19,31 +20,13 @@ public class EventController {
     }
 
     @PostMapping("get/event")
-    public ResponseEntity<?> getEventbyName(@RequestBody
-                                                @Schema(description = "Nome do evento", example = "{\"nome\": \"Nome do evento\"}")
-                                                Map<String, String> event) {
-        try {
-            Map<String, Event> responseOK = new HashMap<>();
-            responseOK.put("event", EventHandlers.getEventbyName(event.get("nome")));
-            return new ResponseEntity<>(responseOK, HttpStatus.OK);
-        } catch (Exception e) {
-            Map<String, String> responseError = new HashMap<>();
-            responseError.put("error", e.getMessage());
-            return new ResponseEntity<>(responseError, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public Event getEventbyName(@RequestBody SearchEvent event){
+        return EventHandlers.getEventbyName(event);
     }
 
     @GetMapping("/get/listevents")
     public ResponseEntity<?> listEvents() {
-        try {
-            Map<String, ArrayList<Event>> responseOK = new HashMap<>();
-            responseOK.put("events", EventHandlers.listEvents());
-            return new ResponseEntity<>(responseOK, HttpStatus.OK);
-        } catch (Exception e) {
-            Map<String, String> responseError = new HashMap<>();
-            responseError.put("error", e.getMessage());
-            return new ResponseEntity<>(responseError, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return EventHandlers.listEvents();
     }
 
     @DeleteMapping("/delete/event")

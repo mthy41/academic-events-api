@@ -1,6 +1,7 @@
 package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.UserDAO;
+import com.academicevents.api.DTO.user.LoginUserData;
 import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,15 +13,15 @@ import java.util.Optional;
 
 @Service
 public class LoginUser {
-    public static ResponseEntity<?> getUserByCpf(Map<String, String> user){
+    public static ResponseEntity<?> getUserByCpf(LoginUserData user){
         Optional<? extends User> bufferedUser;
         Map<String, String> response = new HashMap<>();
-        if(!UserDAO.searchUserByCpf(user.get("cpf"))){
+        if(!UserDAO.searchUserByCpf(user.getCpf())){
             response.put("error", "Credenciais erradas ou invalidas");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-        } else { bufferedUser = UserDAO.getUserByCpf(user.get("cpf")); }
+        } else { bufferedUser = UserDAO.getUserByCpf(user.getCpf()); }
 
-        if(!bufferedUser.map(User::getPassword).orElseThrow().equals(HashPasswordHandler.hashPassword(user.get("password")))){
+        if(!bufferedUser.map(User::getPassword).orElseThrow().equals(HashPasswordHandler.hashPassword(user.getPassword()))){
             response.put("error", "Credenciais erradas ou invalidas");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }

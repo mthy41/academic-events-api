@@ -1,6 +1,7 @@
 package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.EventDAO;
+import com.academicevents.api.DTO.event.SearchEvent;
 import com.academicevents.api.customerrors.EventNotExistsError;
 import com.academicevents.api.models.Event;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class EventHandlers {
@@ -29,15 +32,23 @@ public class EventHandlers {
         }
     }
 
-    public static Event getEventbyName(String nome) {
-        if(EventDAO.searchEventByName(nome)) {
-            return EventDAO.getEventByName(nome);
+    public static Event getEventbyName(SearchEvent event) {
+        if(EventDAO.searchEventByName(event.getNome())) {
+            return EventDAO.getEventByName(event.getNome());
         } else {
             throw new EventNotExistsError("Evento inexistente.");
         }
     }
 
-    public static ArrayList<Event> listEvents() {
-        return EventDAO.listEvents();
+    public static ResponseEntity<?> listEvents() {
+        try {
+            Map<String, ArrayList<Event>> responseOK = new HashMap<>();
+            responseOK.put("events", EventDAO.listEvents());
+            return new ResponseEntity<>(responseOK, HttpStatus.OK);
+        } catch (Exception e) {
+            Map<String, String> responseError = new HashMap<>();
+            responseError.put("error", e.getMessage());
+            return new ResponseEntity<>(responseError, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }
