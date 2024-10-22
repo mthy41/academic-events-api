@@ -1,10 +1,10 @@
 package com.academicevents.api.DTO.user;
 
-public class DeleteUser {
+public class DeleteUserDTO {
     public String cpf;
 
-    public DeleteUser() { }
-    public DeleteUser(String cpf) { this.cpf = cpf; }
+    public DeleteUserDTO() { }
+    public DeleteUserDTO(String cpf) { this.cpf = cpf; }
 
     public String getCpf() {
         return cpf;

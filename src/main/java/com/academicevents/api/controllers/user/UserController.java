@@ -1,7 +1,7 @@
 package com.academicevents.api.controllers.user;
 
-import com.academicevents.api.DTO.user.DeleteUser;
-import com.academicevents.api.DTO.user.LoginUserData;
+import com.academicevents.api.DTO.user.DeleteUserDTO;
+import com.academicevents.api.DTO.user.LoginUserDataDTO;
 import com.academicevents.api.handlers.LoginUser;
 import com.academicevents.api.handlers.UserHandlers;
 import com.academicevents.api.models.User;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     @PostMapping("/login")
-    public ResponseEntity<?> SingIn(@RequestBody LoginUserData user) {
+    public ResponseEntity<?> SingIn(@RequestBody LoginUserDataDTO user) {
         return LoginUser.getUserByCpf(user);
     }
 
@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/user")
-    public ResponseEntity<?> deleteUser(@RequestBody DeleteUser user) {
+    public ResponseEntity<?> deleteUser(@RequestBody DeleteUserDTO user) {
         return UserHandlers.deleteUser(user);
     }
 }

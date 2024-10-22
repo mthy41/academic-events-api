@@ -1,7 +1,7 @@
 package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.UserDAO;
-import com.academicevents.api.DTO.user.LoginUserData;
+import com.academicevents.api.DTO.user.LoginUserDataDTO;
 import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Service
 public class LoginUser {
-    public static ResponseEntity<?> getUserByCpf(LoginUserData user){
+    public static ResponseEntity<?> getUserByCpf(LoginUserDataDTO user){
         Optional<? extends User> bufferedUser;
         Map<String, String> response = new HashMap<>();
         if(!UserDAO.searchUserByCpf(user.getCpf())){

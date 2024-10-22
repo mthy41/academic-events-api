@@ -1,13 +1,13 @@
 package com.academicevents.api.DTO.user;
 
-public class LoginUserData {
+public class LoginUserDataDTO {
 
     public String cpf;
     public String password;
 
-    public LoginUserData() { }
+    public LoginUserDataDTO() { }
 
-    public LoginUserData(String cpf, String password) {
+    public LoginUserDataDTO(String cpf, String password) {
         this.cpf = cpf;
         this.password = password;
     }

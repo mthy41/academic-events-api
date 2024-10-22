@@ -1,7 +1,7 @@
 package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.UserDAO;
-import com.academicevents.api.DTO.user.DeleteUser;
+import com.academicevents.api.DTO.user.DeleteUserDTO;
 import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class UserHandlers {
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
-    public static ResponseEntity<?> deleteUser(DeleteUser user) {
+    public static ResponseEntity<?> deleteUser(DeleteUserDTO user) {
         Map<String, String> response = new HashMap<>();
         if (UserDAO.searchUserByCpf(user.getCpf()) && UserDAO.deleteUser(user.getCpf()))    {
             response.put("success", "Usuário deletado com sucesso!");

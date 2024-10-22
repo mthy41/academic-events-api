@@ -2,7 +2,7 @@ package com.academicevents.api.DTO.event;
 
 import java.sql.Date;
 
-public class Event {
+public class EventDTO {
     public String nome;
     public String instituicao;
     public Date datainicio;
@@ -13,7 +13,7 @@ public class Event {
     public String cidade;
     public String estado;
 
-    public Event(String nome, String instituicao, Date datainicio, Date datafim, String rua, String numero, String bairro, String cidade, String estado) {
+    public EventDTO(String nome, String instituicao, Date datainicio, Date datafim, String rua, String numero, String bairro, String cidade, String estado) {
         this.nome = nome;
         this.instituicao = instituicao;
         this.datainicio = datainicio;

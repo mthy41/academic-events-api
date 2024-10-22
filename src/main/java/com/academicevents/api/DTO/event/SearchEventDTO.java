@@ -1,11 +1,11 @@
 package com.academicevents.api.DTO.event;
 
-public class SearchEvent {
+public class SearchEventDTO {
     public String nome;
 
-    public SearchEvent() { }
+    public SearchEventDTO() { }
 
-    public SearchEvent(String nome) {
+    public SearchEventDTO(String nome) {
         this.nome = nome;
     }
 

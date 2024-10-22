@@ -1,7 +1,7 @@
 package com.academicevents.api.DAO;
 
 import com.academicevents.api.customerrors.ListingEventsError;
-import com.academicevents.api.DTO.event.Event;
+import com.academicevents.api.DTO.event.EventDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class EventDAO {
     @Autowired
     static Connection connection = DB.getConnection();
 
-    public static boolean saveEvent(Event event) {
+    public static boolean saveEvent(EventDTO event) {
         String uuid = UUID.randomUUID().toString();
 
         String queryEvento = "INSERT INTO evento (codigo, nome, datainicio, datafim, instituicao, rua, numero, bairro, cidade, estado) VALUES (?,?,?,?,?,?,?,?,?,?)";
@@ -98,14 +98,14 @@ public class EventDAO {
         return true;
     }
 
-    public static Event getEventByName(String nome) {
+    public static EventDTO getEventByName(String nome) {
         String query = "SELECT * FROM evento WHERE nome = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, nome);
             ResultSet result = statement.executeQuery();
             if(result.next()) {
-                return new Event(
+                return new EventDTO(
                         result.getString("nome"),
                         result.getString("instituicao"),
                         result.getDate("datainicio"),
@@ -122,14 +122,14 @@ public class EventDAO {
         return null;
     }
 
-    public static ArrayList<Event> listEvents() {
+    public static ArrayList<EventDTO> listEvents() {
         String query = "SELECT * FROM evento";
-        ArrayList<Event> events = new ArrayList<>();
+        ArrayList<EventDTO> events = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet result = statement.executeQuery();
             while(result.next()) {
-                events.add(new Event(
+                events.add(new EventDTO(
                         result.getString("nome"),
                         result.getString("instituicao"),
                         result.getDate("datainicio"),
