@@ -54,14 +54,36 @@ public class UserHandlers {
         return true;
     }
 
-    public static boolean updateUserByCpf(String userCpf, Map<String, String> attributesPackage){
-        if(!UserDAO.searchUserByCpf(userCpf)) { return false; }
+    public static ResponseEntity<?> updateUserByCpf(String userCpf, Map<String, String> attributesPackage){
+        Map<String, String> response = new HashMap<>();
 
-        if(attributesPackage.containsKey("nome")){
-            String userName = attributesPackage.get("nome");
-            if(!DataComplianceHandler.checkUserName(userName)){ return false; }
+        if(!UserDAO.searchUserByCpf(userCpf)) {
+            response.put("error", "Usuário não existe");
+            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         }
 
-        return false;
+        if(attributesPackage.containsKey("nome")){
+            if(!DataComplianceHandler.checkUserName(attributesPackage.get("nome"))){
+                response.put("error", "Nome contém caracteres inválidos.");
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            }
+            if(!UserDAO.changeUserName(userCpf, attributesPackage.get("nome"))){
+                response.put("error", "Erro ao alterar o nome de usuário.");
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        if(attributesPackage.containsKey("email")){
+            if(attributesPackage.get("email").isBlank()){
+                response.put("error", "Endereço de email inválido");
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            }
+            if(!UserDAO.changeUserEmail(userCpf, attributesPackage.get("email"))){
+                response.put("error", "Erro ao alterar email do usuário.");
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+        response.put("error", "badreq");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

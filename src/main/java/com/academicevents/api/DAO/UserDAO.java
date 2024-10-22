@@ -105,4 +105,15 @@ public class UserDAO {
         } catch (SQLException e) {throw new RuntimeException(e);}
         return true;
     }
+
+    public static boolean changeUserEmail(String userCpf, String newEmail){
+        if(!searchUserByCpf(userCpf)){ return false; }
+        String userType = getUserByCpf(userCpf).orElseThrow().getRole().getDisplayName();
+        String query = "UPDATE "+userType+" SET email = "+newEmail;
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.execute();
+        } catch(SQLException e){throw new RuntimeException(e);}
+        return true;
+    }
 }
