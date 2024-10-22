@@ -1,6 +1,7 @@
 package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.EventDAO;
+import com.academicevents.api.DAO.PresenceListDAO;
 import com.academicevents.api.DTO.event.Event;
 import com.academicevents.api.DTO.event.SearchEvent;
 import com.academicevents.api.customerrors.EventNotExistsError;
@@ -24,6 +25,7 @@ public class EventHandlers {
             String presenceListCode = UUID.randomUUID().toString();
             String eventCode = EventDAO.searchCodeByName(event.getNome());
             PresenceList presenceList = new PresenceList(presenceListCode, eventCode);
+            PresenceListDAO.savePresenceList(presenceList);
             return new ResponseEntity<>("Evento criado com sucesso!", HttpStatus.OK);
         }
         return new ResponseEntity<>("Erro ao criar o evento.", HttpStatus.INTERNAL_SERVER_ERROR);
