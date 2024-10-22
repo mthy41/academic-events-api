@@ -15,12 +15,7 @@ import java.util.Map;
 public class EventController {
     @PostMapping("/create/event")
     public ResponseEntity<?> createEvent(@RequestBody Event event) {
-        if(EventHandlers.saveEvent(event)) {
-            Map<String, String> response = new HashMap<>();
-            response.put("success", "Evento criado com sucesso!");
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Problema no cadastro.", HttpStatus.INTERNAL_SERVER_ERROR);
+        return EventHandlers.saveEvent(event);
     }
 
     @PostMapping("get/event")

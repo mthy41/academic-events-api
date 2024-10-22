@@ -2,7 +2,6 @@ package com.academicevents.api.DAO;
 
 import com.academicevents.api.customerrors.ListingEventsError;
 import com.academicevents.api.models.Event;
-import com.academicevents.api.models.PresenceList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Service
 public class EventDAO {
@@ -18,29 +18,34 @@ public class EventDAO {
     static Connection connection = DB.getConnection();
 
     public static boolean saveEvent(Event event) {
-        int eventNextCod = EventDAO.getEventLastId() + 1;
-        int presenceListNextCod = PresenceListDAO.getPresenceListLastId() + 1;
-        PresenceList presenceList = new PresenceList(String.valueOf(presenceListNextCod));
-        PresenceListDAO.savePresenceList(presenceList);
-        String query = "INSERT INTO evento (codigo, lpevento, nome, datainicio, datafim, instituicao, rua, numero, bairro, cidade, estado) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+        String uuid = UUID.randomUUID().toString();
+        String uuid2 = UUID.randomUUID().toString();
+
+        String queryListaPresenca = "INSERT INTO lpevento (codigo, codigo_evento) VALUES (?,?)";
+        String queryEvento = "INSERT INTO evento (codigo, nome, datainicio, datafim, instituicao, rua, numero, bairro, cidade, estado) VALUES (?,?,?,?,?,?,?,?,?,?)";
         try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1, String.valueOf(eventNextCod));
-            statement.setString(2, presenceList.cod);
-            statement.setString(3, event.getNome());
-            statement.setDate(4, event.getDatainicio());
-            statement.setDate(5, event.getDatafim());
-            statement.setString(6, event.getInstituicao());
-            statement.setString(7, event.getRua());
-            statement.setString(8, event.getNumero());
-            statement.setString(9, event.getBairro());
-            statement.setString(10, event.getCidade());
-            statement.setString(11, event.getEstado());
+            PreparedStatement statement = connection.prepareStatement(queryEvento);
+
+            statement.setString(1, uuid);
+            statement.setString(2, event.getNome());
+            statement.setDate(3, event.getDatainicio());
+            statement.setDate(4, event.getDatafim());
+            statement.setString(5, event.getInstituicao());
+            statement.setString(6, event.getRua());
+            statement.setString(7, event.getNumero());
+            statement.setString(8, event.getBairro());
+            statement.setString(9, event.getCidade());
+            statement.setString(10, event.getEstado());
 
             statement.execute();
 
+            PreparedStatement statement2 = connection.prepareStatement(queryListaPresenca);
+            statement2.setString(1, uuid2);
+            statement2.setString(2, uuid);
+            statement2.execute();
+
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            return false;
         }
         return true;
     }
