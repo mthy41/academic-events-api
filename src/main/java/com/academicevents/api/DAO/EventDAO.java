@@ -1,7 +1,7 @@
 package com.academicevents.api.DAO;
 
-import com.academicevents.api.customerrors.ListingEventsError;
 import com.academicevents.api.DTO.event.EventDTO;
+import com.academicevents.api.customerrors.ListingEventsError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -107,6 +107,7 @@ public class EventDAO {
             if(result.next()) {
                 return new EventDTO(
                         result.getString("nome"),
+                        result.getString("codigo"),
                         result.getString("instituicao"),
                         result.getDate("datainicio"),
                         result.getDate("datafim"),
@@ -131,6 +132,7 @@ public class EventDAO {
             while(result.next()) {
                 events.add(new EventDTO(
                         result.getString("nome"),
+                        result.getString("codigo"),
                         result.getString("instituicao"),
                         result.getDate("datainicio"),
                         result.getDate("datafim"),
@@ -145,4 +147,5 @@ public class EventDAO {
         }
         return events;
     }
+
 }

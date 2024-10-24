@@ -2,31 +2,36 @@ package com.academicevents.api.DTO.workshop;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.sql.Date;
+
 public class WorkshopCreateDTO {
     @JsonIgnore
     private String codigo;
+    @JsonIgnore
+    private String codigoEvento;
 
+    private String nomeEvento;
     private String cpfAdmin;
     private String banner;
-    private String codigoEvento;
     private String titulo;
     private String descricao;
-    private String dataInicio;
-    private String dataFim;
+    private Date datainicio;
+    private Date datafim;
     private boolean status;
     private int vagas;
 
     public WorkshopCreateDTO() { }
 
-    public WorkshopCreateDTO(String codigo, String cpfAdmin, String banner, String codigoEvento, String titulo, String descricao, String dataInicio, String dataFim, boolean status, int vagas) {
+    public WorkshopCreateDTO(String codigo, String codigoEvento, String nomeEvento, String cpfAdmin, String banner, String titulo, String descricao, Date datainicio, Date datafim, boolean status, int vagas) {
         this.codigo = codigo;
+        this.codigoEvento = codigoEvento;
+        this.nomeEvento = nomeEvento;
         this.cpfAdmin = cpfAdmin;
         this.banner = banner;
-        this.codigoEvento = codigoEvento;
         this.titulo = titulo;
         this.descricao = descricao;
-        this.dataInicio = dataInicio;
-        this.dataFim = dataFim;
+        this.datainicio = datainicio;
+        this.datafim = datafim;
         this.status = status;
         this.vagas = vagas;
     }
@@ -37,6 +42,22 @@ public class WorkshopCreateDTO {
 
     public void setCodigo(String codigo) {
         this.codigo = codigo;
+    }
+
+    public String getCodigoEvento() {
+        return codigoEvento;
+    }
+
+    public void setCodigoEvento(String codigoEvento) {
+        this.codigoEvento = codigoEvento;
+    }
+
+    public String getNomeEvento() {
+        return nomeEvento;
+    }
+
+    public void setNomeEvento(String nomeEvento) {
+        this.nomeEvento = nomeEvento;
     }
 
     public String getCpfAdmin() {
@@ -55,14 +76,6 @@ public class WorkshopCreateDTO {
         this.banner = banner;
     }
 
-    public String getCodigoEvento() {
-        return codigoEvento;
-    }
-
-    public void setCodigoEvento(String codigoEvento) {
-        this.codigoEvento = codigoEvento;
-    }
-
     public String getTitulo() {
         return titulo;
     }
@@ -79,20 +92,20 @@ public class WorkshopCreateDTO {
         this.descricao = descricao;
     }
 
-    public String getDataInicio() {
-        return dataInicio;
+    public Date getDatainicio() {
+        return datainicio;
     }
 
-    public void setDataInicio(String dataInicio) {
-        this.dataInicio = dataInicio;
+    public void setDatainicio(Date datainicio) {
+        this.datainicio = datainicio;
     }
 
-    public String getDataFim() {
-        return dataFim;
+    public Date getDatafim() {
+        return datafim;
     }
 
-    public void setDataFim(String dataFim) {
-        this.dataFim = dataFim;
+    public void setDatafim(Date datafim) {
+        this.datafim = datafim;
     }
 
     public boolean isStatus() {

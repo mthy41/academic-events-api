@@ -1,8 +1,13 @@
 package com.academicevents.api.DTO.event;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Date;
 
 public class EventDTO {
+    @JsonIgnore
+    private String codigo;
+
     public String nome;
     public String instituicao;
     public Date datainicio;
@@ -13,8 +18,9 @@ public class EventDTO {
     public String cidade;
     public String estado;
 
-    public EventDTO(String nome, String instituicao, Date datainicio, Date datafim, String rua, String numero, String bairro, String cidade, String estado) {
+    public EventDTO(String nome, String codigo, String instituicao, Date datainicio, Date datafim, String rua, String numero, String bairro, String cidade, String estado) {
         this.nome = nome;
+        this.codigo = codigo;
         this.instituicao = instituicao;
         this.datainicio = datainicio;
         this.datafim = datafim;
@@ -96,6 +102,10 @@ public class EventDTO {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+
+    public String getCodigo() { return codigo; }
+
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
     @Override
     public String toString() {

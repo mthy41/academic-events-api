@@ -1,5 +1,6 @@
 package com.academicevents.api.DAO;
 
+import com.academicevents.api.DTO.user.UserProfileDTO;
 import com.academicevents.api.builders.UserFactory;
 import com.academicevents.api.customerrors.UserNotFoundError;
 import com.academicevents.api.models.User;
@@ -103,5 +104,34 @@ public class UserDAO {
         }
         DB.closeConnection();
         return true;
+    }
+
+    public static UserProfileDTO loadUserData(String cpf) {
+        conn = DB.getConnection();
+        String query = "SELECT nome, email, foto, cpf, rua, numero, bairro, cidade, estado, role FROM administrador WHERE cpf = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, cpf);
+            ResultSet result = statement.executeQuery();
+            if(result.next()){
+                DB.closeConnection();
+                return  new UserProfileDTO(
+                        result.getString("nome"),
+                        result.getString("email"),
+                        result.getString("foto"),
+                        result.getString("cpf"),
+                        result.getString("rua"),
+                        result.getString("numero"),
+                        result.getString("bairro"),
+                        result.getString("cidade"),
+                        result.getString("estado"),
+                        result.getString("role")
+                );
+            }
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+        DB.closeConnection();
+        return null;
     }
 }
