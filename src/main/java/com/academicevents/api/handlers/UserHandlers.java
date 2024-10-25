@@ -54,9 +54,15 @@ public class UserHandlers {
         return true;
     }
 
-    public static ResponseEntity<?> updateUserByCpf(String userCpf, Map<String, String> attributesPackage){
+    public static ResponseEntity<?> updateUserByCpf(Map<String, String> attributesPackage){
+        short dataChanges = 0;
         Map<String, String> response = new HashMap<>();
+        if(!attributesPackage.containsKey("userCpf")){
+            response.put("error", "Usuário não informado");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
 
+        String userCpf = attributesPackage.get("userCpf");
         if(!UserDAO.searchUserByCpf(userCpf)) {
             response.put("error", "Usuário não existe");
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
@@ -70,7 +76,7 @@ public class UserHandlers {
             if(!UserDAO.changeUserName(userCpf, attributesPackage.get("nome"))){
                 response.put("error", "Erro ao alterar o nome de usuário.");
                 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            } dataChanges++;
         }
 
         if(attributesPackage.containsKey("email")){
@@ -81,9 +87,24 @@ public class UserHandlers {
             if(!UserDAO.changeUserEmail(userCpf, attributesPackage.get("email"))){
                 response.put("error", "Erro ao alterar email do usuário.");
                 return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            }
+            } dataChanges++;
         }
-        response.put("error", "badreq");
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
+        if(attributesPackage.containsKey("rua")){
+            if(attributesPackage.get("rua").isBlank()){
+                response.put("error", "Campo rua inserido e invalido");
+                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            }
+            if(!UserDAO.changeUserRua(userCpf, attributesPackage.get("rua"))){
+                response.put("error", "Erro ao alterar o endereço do usuario: Rua.");
+                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            } dataChanges++;
+        }
+        if(dataChanges == 0){
+            response.put("error", "badreq");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        response.put("success", "Alteracoes feitas com sucesso");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

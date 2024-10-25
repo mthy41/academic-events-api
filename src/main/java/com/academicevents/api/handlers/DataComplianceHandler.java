@@ -13,7 +13,7 @@ public class DataComplianceHandler {
 
     public static boolean checkUserName(String userName){
         if(userName.length() > USER_NAME_MAX_LENGTH){ return false; }
-        for(char c : userName.toCharArray()){ if(!ALLOWED_CHARS.contains(c)){ return false; } }
+        for(char c : userName.toUpperCase().toCharArray()){ if(!ALLOWED_CHARS.contains(c)){ return false; } }
         return true;
     }
 

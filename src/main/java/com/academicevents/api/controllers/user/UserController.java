@@ -6,10 +6,9 @@ import com.academicevents.api.DTO.user.LoginUserDataDTO;
 import com.academicevents.api.handlers.LoginUser;
 import com.academicevents.api.models.User;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -27,5 +26,10 @@ public class UserController {
     @DeleteMapping("/delete/user")
     public ResponseEntity<?> deleteUser(@RequestBody DeleteUserDTO user) {
         return UserHandlers.deleteUser(user);
+    }
+
+    @PutMapping("/update/user")
+    public ResponseEntity<?> updateUser(@RequestBody Map<String, String> attributesPackage){
+        return UserHandlers.updateUserByCpf(attributesPackage);
     }
 }
