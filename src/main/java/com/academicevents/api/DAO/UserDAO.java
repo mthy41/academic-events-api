@@ -1,5 +1,6 @@
 package com.academicevents.api.DAO;
 
+import com.academicevents.api.DTO.user.UserProfileDTO;
 import com.academicevents.api.builders.UserFactory;
 import com.academicevents.api.customerrors.UserNotFoundError;
 import com.academicevents.api.models.User;
@@ -10,7 +11,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +21,8 @@ public class UserDAO {
     static Connection conn = DB.getConnection();
 
     public static boolean searchUserByCpf(String cpf) {
+        conn = DB.getConnection();
+
         boolean searchResult;
         String query = "SELECT cpf FROM ("
                 + "SELECT cpf FROM administrador "
@@ -34,6 +36,7 @@ public class UserDAO {
             statement.setString(1, cpf);
             ResultSet result = statement.executeQuery();
             searchResult = result.next();
+            DB.closeConnection();
         } catch (SQLException e ) {
             throw new RuntimeException(e);
         }
@@ -41,7 +44,7 @@ public class UserDAO {
     }
 
     public static boolean saveUser(User user) {
-        Connection conn = DB.getConnection();
+        conn = DB.getConnection();
 
         String userType = user.getRole().getDisplayName();
         String query = "INSERT INTO " + userType + " (cpf, foto, nome, email, senha, rua, numero, bairro, cidade, estado, role) " + "VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?)";
@@ -59,14 +62,16 @@ public class UserDAO {
             statement.setString(10, user.getEstado());
             statement.setString(11, user.getRole().getDisplayName());
             statement.execute();
+            DB.closeConnection();
         } catch (SQLException e) {
+            System.out.println(e.getMessage());
             throw new RuntimeException(e);
-//            return false;
         }
         return true;
     }
 
     public static Optional<? extends User> getUserByCpf(String cpf){
+        conn = DB.getConnection();
         String admQuery = "SELECT * FROM administrador WHERE cpf = '"+cpf+"'";
         String proQuery = "SELECT * FROM professor WHERE cpf = '"+cpf+"'";
         String parQuery = "SELECT * FROM participante WHERE cpf = '"+cpf+"'";
@@ -77,21 +82,27 @@ public class UserDAO {
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet result = statement.executeQuery();
                 if(result.next()){
-                    return UserFactory.buildUser(result);
+                DB.closeConnection();
+                return UserFactory.buildUser(result);
                 }
             } catch (SQLException e ) {throw new RuntimeException(e);}
-        } return Optional.empty();
+        }
+        DB.closeConnection();
+        return Optional.empty();
     }
 
     public static boolean deleteUser(String cpf) {
+        conn = DB.getConnection();
         String query = "DELETE FROM administrador WHERE cpf = ?";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, cpf);
             statement.execute();
+            DB.closeConnection();
         } catch (SQLException e ) {
             throw new UserNotFoundError("Usuário não encontrado");
         }
+        DB.closeConnection();
         return true;
     }
 
@@ -172,5 +183,34 @@ public class UserDAO {
             statement.execute();
         } catch(SQLException e){throw new RuntimeException(e);}
         return true;
+    }
+
+    public static UserProfileDTO loadUserData(String cpf) {
+        conn = DB.getConnection();
+        String query = "SELECT nome, email, foto, cpf, rua, numero, bairro, cidade, estado, role FROM administrador WHERE cpf = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, cpf);
+            ResultSet result = statement.executeQuery();
+            if(result.next()){
+                DB.closeConnection();
+                return  new UserProfileDTO(
+                        result.getString("nome"),
+                        result.getString("email"),
+                        result.getString("foto"),
+                        result.getString("cpf"),
+                        result.getString("rua"),
+                        result.getString("numero"),
+                        result.getString("bairro"),
+                        result.getString("cidade"),
+                        result.getString("estado"),
+                        result.getString("role")
+                );
+            }
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+        DB.closeConnection();
+        return null;
     }
 }

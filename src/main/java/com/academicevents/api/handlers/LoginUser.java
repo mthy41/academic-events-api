@@ -2,6 +2,7 @@ package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.UserDAO;
 import com.academicevents.api.DTO.user.LoginUserDataDTO;
+import com.academicevents.api.DTO.user.UserProfileDTO;
 import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,17 @@ public class LoginUser {
             response.put("error", "Credenciais erradas ou invalidas");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
+        UserProfileDTO loggedUser = UserDAO.loadUserData(user.getCpf());
+        response.put("nome", loggedUser.getNome());
+        response.put("email", loggedUser.getEmail());
+        response.put("foto", loggedUser.getFoto());
+        response.put("cpf", loggedUser.getCpf());
+        response.put("rua", loggedUser.getRua());
+        response.put("numero", loggedUser.getNumero());
+        response.put("bairro", loggedUser.getBairro());
+        response.put("cidade", loggedUser.getCidade());
+        response.put("estado", loggedUser.getEstado());
+        response.put("role", loggedUser.getRole());
         response.put("success", "Login realizado com sucesso!");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
