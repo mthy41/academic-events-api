@@ -9,10 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
-import java.util.Map;
-import java.util.Optional;
-
-import java.util.HashMap;
+import java.util.*;
 
 @Service
 @CrossOrigin(origins = "*")
@@ -42,70 +39,59 @@ public class UserHandlers {
     }
 
     public static boolean getUserByCpf(Map<String, String> user){
-        Optional<? extends User> bufferedUser;
+        User bufferedUser;
         if(!UserDAO.searchUserByCpf(user.get("cpf"))){
             throw new WrongCredentialsError("Credenciais erradas ou invalidas");
         } else { bufferedUser = UserDAO.getUserByCpf(user.get("cpf")); }
 
-        if(!bufferedUser.map(User::getPassword)
-                .orElseThrow()
+        if(bufferedUser != null && !bufferedUser
+                .getPassword()
                 .equals(HashPasswordHandler.hashPassword(user.get("password")))){
             throw new WrongCredentialsError("Credenciais erradas ou invalidas");
         }
         return true;
     }
 
-    public static ResponseEntity<?> updateUserByCpf(Map<String, String> attributesPackage){
-        short dataChanges = 0;
+    public static ResponseEntity<?> updateUserData(Map<String, String> attributesPackage){
         Map<String, String> response = new HashMap<>();
-        if(!attributesPackage.containsKey("userCpf")){
-            response.put("error", "Usuário não informado");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+
+        List<String> validKeys = Arrays.asList("userCpf", "nome", "email", "rua", "numero", "bairro", "cidade", "estado");
+        if(!new HashSet<>(validKeys).containsAll(attributesPackage.keySet())){
+           response.put("error", "Ouve um erro ao serializar os dados.");
+           return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
+        Map<String, String> cleanedPackage = new HashMap<>();
+        for(String key : attributesPackage.keySet()){
+            String value = attributesPackage.get(key);
+
+            //manual check for special attributes.
+            if(key.equals("nome")){
+                if(!DataComplianceHandler.checkUserName(value)){
+                    response.put("error", "Nome inserido contém caracteres inválidos.");
+                    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                } cleanedPackage.put(key, value); continue; }
+            if(key.equals("userCpf")){
+                if(!DataComplianceHandler.checkCpf(value)){
+                    response.put("error", "CPF inserido é inválido.");
+                    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                }
+                if(!UserDAO.searchUserByCpf(value)){
+                    response.put("error", "CPF inserido não pertence à nenhum usuário.");
+                    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                } continue;
+            }
+
+            if(!value.isBlank()){ cleanedPackage.put(key, value); }
+        }
         String userCpf = attributesPackage.get("userCpf");
-        if(!UserDAO.searchUserByCpf(userCpf)) {
-            response.put("error", "Usuário não existe");
-            return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+
+        if(!UserDAO.updateUserData(userCpf, cleanedPackage)){
+            response.put("error", "Erro ao atualizar os dados.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if(attributesPackage.containsKey("nome")){
-            if(!DataComplianceHandler.checkUserName(attributesPackage.get("nome"))){
-                response.put("error", "Nome contém caracteres inválidos.");
-                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-            }
-            if(!UserDAO.changeUserName(userCpf, attributesPackage.get("nome"))){
-                response.put("error", "Erro ao alterar o nome de usuário.");
-                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            } dataChanges++;
-        }
-
-        if(attributesPackage.containsKey("email")){
-            if(attributesPackage.get("email").isBlank()){
-                response.put("error", "Endereço de email inválido");
-                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-            }
-            if(!UserDAO.changeUserEmail(userCpf, attributesPackage.get("email"))){
-                response.put("error", "Erro ao alterar email do usuário.");
-                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            } dataChanges++;
-        }
-
-        if(attributesPackage.containsKey("rua")){
-            if(attributesPackage.get("rua").isBlank()){
-                response.put("error", "Campo rua inserido e invalido");
-                return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-            }
-            if(!UserDAO.changeUserRua(userCpf, attributesPackage.get("rua"))){
-                response.put("error", "Erro ao alterar o endereço do usuario: Rua.");
-                return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-            } dataChanges++;
-        }
-        if(dataChanges == 0){
-            response.put("error", "badreq");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-        response.put("success", "Alteracoes feitas com sucesso");
+        response.put("success", "Dados atualizados com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

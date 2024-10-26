@@ -30,6 +30,6 @@ public class UserController {
 
     @PutMapping("/update/user")
     public ResponseEntity<?> updateUser(@RequestBody Map<String, String> attributesPackage){
-        return UserHandlers.updateUserByCpf(attributesPackage);
+        return UserHandlers.updateUserData(attributesPackage);
     }
 }

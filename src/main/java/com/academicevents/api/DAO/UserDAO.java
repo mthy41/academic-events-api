@@ -13,7 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class UserDAO {
@@ -70,7 +71,7 @@ public class UserDAO {
         return true;
     }
 
-    public static Optional<? extends User> getUserByCpf(String cpf){
+    public static User getUserByCpf(String cpf){
         conn = DB.getConnection();
         String admQuery = "SELECT * FROM administrador WHERE cpf = '"+cpf+"'";
         String proQuery = "SELECT * FROM professor WHERE cpf = '"+cpf+"'";
@@ -88,7 +89,7 @@ public class UserDAO {
             } catch (SQLException e ) {throw new RuntimeException(e);}
         }
         DB.closeConnection();
-        return Optional.empty();
+        return null;
     }
 
     public static boolean deleteUser(String cpf) {
@@ -106,83 +107,19 @@ public class UserDAO {
         return true;
     }
 
-    public static boolean changeUserName(String userCpf, String newName){
-        if(!searchUserByCpf(userCpf)){ return false; }
-        String userType = getUserByCpf(userCpf).orElseThrow().getRole().getDisplayName();
-        String query = "UPDATE "+userType+" SET nome = '"+newName+"' WHERE cpf = '"+userCpf+"';";
-
-        System.out.println(query);
+    public static boolean updateUserData(String userCpf, Map<String, String> attPackage){
+        String userType = Objects.requireNonNull(getUserByCpf(userCpf)).getRole().getDisplayName();
+        conn = DB.getConnection();
         try {
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.execute();
-        } catch (SQLException e) {throw new RuntimeException(e);}
-        return true;
-    }
-
-    public static boolean changeUserEmail(String userCpf, String newEmail){
-        if(!searchUserByCpf(userCpf)){ return false; }
-        String userType = getUserByCpf(userCpf).orElseThrow().getRole().getDisplayName();
-        String query = "UPDATE "+userType+" SET email = '"+newEmail+"' WHERE cpf = '"+userCpf+"';";
-        try {
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.execute();
-        } catch(SQLException e){throw new RuntimeException(e);}
-        return true;
-    }
-
-    public static boolean changeUserRua(String userCpf, String newRua){
-        if(!searchUserByCpf(userCpf)){ return false; }
-        String userType = getUserByCpf(userCpf).orElseThrow().getRole().getDisplayName();
-        String query = "UPDATE "+userType+" SET rua = '"+newRua+"' WHERE cpf = '"+userCpf+"';";
-        try {
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.execute();
-        } catch(SQLException e){throw new RuntimeException(e);}
-        return true;
-    }
-
-    public static boolean changeUserBairro(String userCpf, String newBairro){
-        if(!searchUserByCpf(userCpf)){ return false; }
-        String userType = getUserByCpf(userCpf).orElseThrow().getRole().getDisplayName();
-        String query = "UPDATE "+userType+" SET bairro = '"+newBairro+"' WHERE cpf = '"+userCpf+"';";
-        try {
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.execute();
-        } catch(SQLException e){throw new RuntimeException(e);}
-        return true;
-    }
-
-    public static boolean changeUserCidade(String userCpf, String newCidade){
-        if(!searchUserByCpf(userCpf)){ return false; }
-        String userType = getUserByCpf(userCpf).orElseThrow().getRole().getDisplayName();
-        String query = "UPDATE "+userType+" SET cidade = '"+newCidade+"' WHERE cpf = '"+userCpf+"';";
-        try {
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.execute();
-        } catch(SQLException e){throw new RuntimeException(e);}
-        return true;
-    }
-
-    public static boolean changeUserEstado(String userCpf, String newEstado){
-        if(!searchUserByCpf(userCpf)){ return false; }
-        String userType = getUserByCpf(userCpf).orElseThrow().getRole().getDisplayName();
-        String query = "UPDATE "+userType+" SET estado = '"+newEstado+"' WHERE cpf = '"+userCpf+"';";
-        try {
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.execute();
-        } catch(SQLException e){throw new RuntimeException(e);}
-        return true;
-    }
-
-    public static boolean changeUserNumero(String userCpf, String newNumero){
-        if(!searchUserByCpf(userCpf)){ return false; }
-        String userType = getUserByCpf(userCpf).orElseThrow().getRole().getDisplayName();
-        String query = "UPDATE "+userType+" SET numero = '"+newNumero+"' WHERE cpf = '"+userCpf+"';";
-        try {
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.execute();
-        } catch(SQLException e){throw new RuntimeException(e);}
-        return true;
+            for(String k : attPackage.keySet()) {
+                String query = "UPDATE "+userType+" SET "+k+" = '"+attPackage.get(k)+"' WHERE cpf = '"+userCpf+"';";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.execute();
+            }
+        } catch (SQLException e) {
+            DB.closeConnection();
+            throw new RuntimeException(e);
+        } DB.closeConnection(); return true;
     }
 
     public static UserProfileDTO loadUserData(String cpf) {
@@ -192,6 +129,7 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, cpf);
             ResultSet result = statement.executeQuery();
+
             if(result.next()){
                 DB.closeConnection();
                 return  new UserProfileDTO(
