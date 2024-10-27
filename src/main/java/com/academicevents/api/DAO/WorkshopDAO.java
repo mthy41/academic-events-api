@@ -45,19 +45,18 @@ public class WorkshopDAO {
     }
 
     public static boolean saveWorkshop(WorkshopCreateDTO workshop) {
-        String query = "INSERT INTO minicurso (codigo, banner, codigo_evento, cpf_participante, titulo, descricao, datainicio, datafim, status, qtddparticipantes) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO minicurso (codigo, banner, codigo_evento, titulo, descricao, datainicio, datafim, status, qtddparticipantes) VALUES (?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, workshop.getCodigo());
             statement.setString(2, workshop.getBanner());
             statement.setString(3, workshop.getCodigoEvento());
-            statement.setString(4, workshop.getCpfAdmin());
-            statement.setString(5, workshop.getTitulo());
-            statement.setString(6, workshop.getDescricao());
-            statement.setDate(7, workshop.getDatainicio());
-            statement.setDate(8, workshop.getDatafim());
-            statement.setBoolean(9, workshop.isStatus());
-            statement.setInt(10, workshop.getVagas());
+            statement.setString(4, workshop.getTitulo());
+            statement.setString(5, workshop.getDescricao());
+            statement.setObject(6, workshop.getDatainicio());
+            statement.setObject(7, workshop.getDatafim());
+            statement.setBoolean(8, workshop.isStatus());
+            statement.setInt(9, workshop.getVagas());
             statement.execute();
             DB.closeConnection();
             return true;

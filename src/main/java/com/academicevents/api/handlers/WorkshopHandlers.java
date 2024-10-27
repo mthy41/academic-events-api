@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class WorkshopHandlers {
     public static ResponseEntity<?> saveWorkshop(WorkshopCreateDTO workshop) {
@@ -24,7 +25,8 @@ public class WorkshopHandlers {
             return new ResponseEntity<>("Erro ao criar o minicurso. Evento inexistente, verifique o nome do evento.", HttpStatus.BAD_REQUEST);
         }
 
-        workshop.setCodigo(evento.getCodigo());
+        workshop.setCodigoEvento(evento.getCodigo());
+        workshop.setCodigo(UUID.randomUUID().toString());
 
         if(!WorkshopDAO.saveWorkshop(workshop)) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar minicurso!");
