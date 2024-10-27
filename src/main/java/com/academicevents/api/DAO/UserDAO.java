@@ -13,7 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class UserDAO {
@@ -22,7 +23,7 @@ public class UserDAO {
 
     public static boolean searchUserByCpf(String cpf) {
         conn = DB.getConnection();
-        
+
         boolean searchResult;
         String query = "SELECT cpf FROM ("
                 + "SELECT cpf FROM administrador "
@@ -70,7 +71,7 @@ public class UserDAO {
         return true;
     }
 
-    public static Optional<? extends User> getUserByCpf(String cpf){
+    public static User getUserByCpf(String cpf){
         conn = DB.getConnection();
         String admQuery = "SELECT * FROM administrador WHERE cpf = '"+cpf+"'";
         String proQuery = "SELECT * FROM professor WHERE cpf = '"+cpf+"'";
@@ -88,7 +89,7 @@ public class UserDAO {
             } catch (SQLException e ) {throw new RuntimeException(e);}
         }
         DB.closeConnection();
-        return Optional.empty();
+        return null;
     }
 
     public static boolean deleteUser(String cpf) {
@@ -106,6 +107,21 @@ public class UserDAO {
         return true;
     }
 
+    public static boolean updateUserData(String userCpf, Map<String, String> attPackage){
+        String userType = Objects.requireNonNull(getUserByCpf(userCpf)).getRole().getDisplayName();
+        conn = DB.getConnection();
+        try {
+            for(String k : attPackage.keySet()) {
+                String query = "UPDATE "+userType+" SET "+k+" = '"+attPackage.get(k)+"' WHERE cpf = '"+userCpf+"';";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.execute();
+            }
+        } catch (SQLException e) {
+            DB.closeConnection();
+            throw new RuntimeException(e);
+        } DB.closeConnection(); return true;
+    }
+
     public static UserProfileDTO loadUserData(String cpf) {
         conn = DB.getConnection();
         String query = "SELECT nome, email, foto, cpf, rua, numero, bairro, cidade, estado, role FROM administrador WHERE cpf = ?";
@@ -113,6 +129,7 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, cpf);
             ResultSet result = statement.executeQuery();
+
             if(result.next()){
                 DB.closeConnection();
                 return  new UserProfileDTO(

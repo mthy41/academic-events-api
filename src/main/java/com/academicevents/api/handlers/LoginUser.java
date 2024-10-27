@@ -15,14 +15,15 @@ import java.util.Optional;
 @Service
 public class LoginUser {
     public static ResponseEntity<?> getUserByCpf(LoginUserDataDTO user){
-        Optional<? extends User> bufferedUser;
+        User bufferedUser;
         Map<String, String> response = new HashMap<>();
         if(!UserDAO.searchUserByCpf(user.getCpf())){
             response.put("error", "Credenciais erradas ou invalidas");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         } else { bufferedUser = UserDAO.getUserByCpf(user.getCpf()); }
 
-        if(!bufferedUser.map(User::getPassword).orElseThrow().equals(HashPasswordHandler.hashPassword(user.getPassword()))){
+        assert bufferedUser != null;
+        if(!bufferedUser.getPassword().equals(HashPasswordHandler.hashPassword(user.getPassword()))){
             response.put("error", "Credenciais erradas ou invalidas");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
