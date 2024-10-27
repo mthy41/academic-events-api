@@ -1,12 +1,14 @@
 package com.academicevents.api.DAO;
 
 import com.academicevents.api.DTO.workshop.WorkshopCreateDTO;
+import com.academicevents.api.DTO.workshop.WorkshopInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class WorkshopDAO {
     @Autowired
@@ -61,6 +63,64 @@ public class WorkshopDAO {
             DB.closeConnection();
             return true;
         } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static ArrayList<WorkshopInfoDTO> listWorkshopsByEventName(String eventName) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT * FROM minicurso WHERE codigo_evento = ?";
+
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            ResultSet result = statement.executeQuery();
+            ArrayList<WorkshopInfoDTO> workshops = new ArrayList<>();
+            while(result.next()) {
+                WorkshopInfoDTO workshop = new WorkshopInfoDTO(
+                        result.getString("titulo"),
+                        result.getString("descricao"),
+                        result.getString("banner"),
+                        result.getDate("datainicio"),
+                        result.getDate("datafim"),
+                        result.getBoolean("status"),
+                        result.getInt("qtddparticipantes")
+                );
+
+
+                workshops.add(workshop);
+            }
+
+            DB.closeConnection();
+            return workshops;
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static ArrayList<WorkshopInfoDTO> listWorkshopsByEventCode(String codigoEvento) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT * FROM minicurso WHERE codigo_evento = ?";
+
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, codigoEvento);
+            ResultSet result = statement.executeQuery();
+            ArrayList<WorkshopInfoDTO> workshops = new ArrayList<>();
+            while(result.next()) {
+                WorkshopInfoDTO workshop = new WorkshopInfoDTO(
+                        result.getString("titulo"),
+                        result.getString("descricao"),
+                        result.getString("banner"),
+                        result.getDate("datainicio"),
+                        result.getDate("datafim"),
+                        result.getBoolean("status"),
+                        result.getInt("qtddparticipantes")
+                );
+                workshops.add(workshop);
+            }
+            DB.closeConnection();
+            return workshops;
+        } catch (SQLException e ) {
             throw new RuntimeException(e);
         }
     }
