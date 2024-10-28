@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class LoginUser {
@@ -27,7 +26,10 @@ public class LoginUser {
             response.put("error", "Credenciais erradas ou invalidas");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
+        System.out.println(user.getCpf());
+        System.out.println(user);
         UserProfileDTO loggedUser = UserDAO.loadUserData(user.getCpf());
+        System.out.println(loggedUser);
         response.put("nome", loggedUser.getNome());
         response.put("email", loggedUser.getEmail());
         response.put("foto", loggedUser.getFoto());

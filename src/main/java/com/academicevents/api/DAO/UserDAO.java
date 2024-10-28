@@ -124,31 +124,36 @@ public class UserDAO {
 
     public static UserProfileDTO loadUserData(String cpf) {
         conn = DB.getConnection();
-        String query = "SELECT nome, email, foto, cpf, rua, numero, bairro, cidade, estado, role FROM administrador WHERE cpf = ?";
+        String query = "SELECT nome, email, foto, cpf, rua, numero, bairro, cidade, estado, role " +
+                "FROM administrador WHERE cpf = ? " +
+                "UNION " +
+                "SELECT nome, email, foto, cpf, rua, numero, bairro, cidade, estado, role " +
+                "FROM participante WHERE cpf = ? " +
+                "UNION " +
+                "SELECT nome, email, foto, cpf, rua, numero, bairro, cidade, estado, role " +
+                "FROM professor WHERE cpf = ?";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, cpf);
-            ResultSet result = statement.executeQuery();
+            statement.setString(2, cpf);
+            statement.setString(3, cpf);
 
-            if(result.next()){
-                DB.closeConnection();
-                return  new UserProfileDTO(
-                        result.getString("nome"),
-                        result.getString("email"),
-                        result.getString("foto"),
-                        result.getString("cpf"),
-                        result.getString("rua"),
-                        result.getString("numero"),
-                        result.getString("bairro"),
-                        result.getString("cidade"),
-                        result.getString("estado"),
-                        result.getString("role")
-                );
-            }
+            ResultSet result = statement.executeQuery();
+            result.next();
+
+            return  new UserProfileDTO(
+                    result.getString("nome"),
+                    result.getString("email"),
+                    result.getString("foto"),
+                    result.getString("cpf"),
+                    result.getString("rua"),
+                    result.getString("numero"),
+                    result.getString("bairro"),
+                    result.getString("cidade"),
+                    result.getString("estado"),
+                    result.getString("role"));
         } catch (SQLException e ) {
             throw new RuntimeException(e);
         }
-        DB.closeConnection();
-        return null;
     }
 }
