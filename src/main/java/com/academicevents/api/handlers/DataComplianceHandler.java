@@ -11,6 +11,14 @@ public class DataComplianceHandler {
             'Â', 'À', 'Ã', 'Ä', 'É', 'Ê', 'È', 'Í', 'Ì',
             'Ó', 'Ô', 'Ò', 'Õ', 'Ö', 'Ú', 'Ù', 'Ü', 'Ç', ' '));
 
+    /*
+     * o valor máximo que uma imagem pode ter é de 5MiB,
+     * aproximadamente 5.24Mb. que convertido para
+     * bytes fica: 5242880B.
+     */
+    private static final long MAX_PFP_IMAGE_SIZE = 5242880;
+    private static final int MAX_PFP_WIDTH = 1024;
+
     public static boolean checkUserName(String userName){
         if(userName.length() > USER_NAME_MAX_LENGTH){ return false; }
         for(char c : userName.toUpperCase().toCharArray()){ if(!ALLOWED_CHARS.contains(c)){ return false; } }
@@ -25,5 +33,20 @@ public class DataComplianceHandler {
         if(unhashedPassword.isBlank()) { return false; }
         if(unhashedPassword.length() <= 10){ return false; }
         return !unhashedPassword.contains(" ");
+    }
+
+    public static boolean checkUserImage(String base64Image) throws Exception {
+        if(!ImageCoreUtils.isValidFormat(base64Image)){ return false; }
+
+        base64Image = ImageCoreUtils.clampHeader(base64Image);
+        byte[] decodedImage = ImageCoreUtils.decodeImage(base64Image);
+
+        if(decodedImage.length > MAX_PFP_IMAGE_SIZE){ return false; }
+
+        int imageWidth = ImageCoreUtils.getDimensions(ImageCoreUtils.getImage(decodedImage))[0];
+        int imageHeight = ImageCoreUtils.getDimensions(ImageCoreUtils.getImage(decodedImage))[1];
+
+        if(imageWidth != imageHeight){ return false; }
+        return imageWidth > MAX_PFP_WIDTH;
     }
 }
