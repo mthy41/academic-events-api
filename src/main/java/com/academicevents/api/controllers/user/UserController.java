@@ -32,4 +32,9 @@ public class UserController {
     public ResponseEntity<?> updateUser(@RequestBody Map<String, String> attributesPackage){
         return UserHandlers.updateUserData(attributesPackage);
     }
+
+    @PutMapping("/update/user/password")
+    public ResponseEntity<?> updateUserPassword(@RequestBody Map<String, String> passwordPackage){
+        return UserHandlers.updateUserPassword(passwordPackage);
+    }
 }

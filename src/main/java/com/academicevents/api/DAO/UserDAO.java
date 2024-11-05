@@ -122,6 +122,22 @@ public class UserDAO {
         } DB.closeConnection(); return true;
     }
 
+    public static boolean updateUserPassword(String userType, String userCpf, String newPassword){
+        boolean success = false;
+        conn = DB.getConnection();
+        try {
+            String query = "UPDATE "+userType+" SET senha = "+newPassword+"WHERE cpf = "+userCpf;
+            PreparedStatement statement = conn.prepareStatement(query);
+            if(statement.execute()){ success = true; }
+        } catch (SQLException e) {
+            DB.closeConnection();
+            throw new RuntimeException(e);
+        }
+        DB.closeConnection();
+        return success;
+    }
+
+
     public static UserProfileDTO loadUserData(String cpf) {
         conn = DB.getConnection();
         String query = "SELECT nome, email, foto, cpf, rua, numero, bairro, cidade, estado, role " +

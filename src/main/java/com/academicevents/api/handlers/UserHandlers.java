@@ -94,4 +94,51 @@ public class UserHandlers {
         response.put("success", "Dados atualizados com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    public static ResponseEntity<?> updateUserPassword(Map<String, String> passwordPackage){
+        Map<String, String> response = new HashMap<>();
+        String userCpf, oldPassword, newPassword;
+        if(!passwordPackage.containsKey("userCpf")){
+            response.put("error", "Bad Request!");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        userCpf = passwordPackage.get("userCpf");
+
+        if(!passwordPackage.containsKey("oldPassword")){
+            response.put("error", "Bad Request!");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        oldPassword = passwordPackage.get("oldPassword");
+
+        if(!passwordPackage.containsKey("newPassword")){
+            response.put("error", "Bad Request!");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+        newPassword = passwordPackage.get("newPassword");
+
+        if(!DataComplianceHandler.checkPassword(newPassword)){
+            response.put("error", "Erro ao atualizar nova senha: nova senha inserida é inválida.");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+
+        User bufferedUser = UserDAO.getUserByCpf(userCpf);
+        if(bufferedUser == null){
+            response.put("erro", "Erro ao atualizar senha: usuário não encontrado.");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+
+        String userType = bufferedUser.getRole().getDisplayName();
+        if(!HashPasswordHandler.hashPassword(bufferedUser.getPassword()).equals(oldPassword)){
+            response.put("error", "Senha inserida não corresponde à senha do usuário.");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+
+        if(!UserDAO.updateUserPassword(userType, userCpf, newPassword)){
+            response.put("error", "Erro ao atualizar a senhado usuário.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        response.put("success", "Senha atualizada com sucesso.");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
