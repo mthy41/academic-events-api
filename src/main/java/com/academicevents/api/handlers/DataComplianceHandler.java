@@ -24,7 +24,6 @@ public class DataComplianceHandler {
     public static boolean checkPassword(String unhashedPassword) {
         if(unhashedPassword.isBlank()) { return false; }
         if(unhashedPassword.length() <= 10){ return false; }
-        if(unhashedPassword.contains(" ")){ return false; }
-        return true;
+        return !unhashedPassword.contains(" ");
     }
 }
