@@ -10,13 +10,17 @@ public class ImageCoreUtils {
     public static boolean isValidFormat(String base64Image){
         final String JPEG_HEADER = "data:image/jpeg;base64,";
         final String PNG_HEADER = "data:image/png;base64,";
-        return base64Image != null &&
-                ((base64Image.substring(0, JPEG_HEADER.length()).contains(JPEG_HEADER)) ||
-                 (base64Image.substring(0, PNG_HEADER.length()).contains(PNG_HEADER)));
+        if(base64Image == null || base64Image.length() < 23){ return false; }
+        boolean isHeaderValid = (base64Image.startsWith(JPEG_HEADER)) || (base64Image.startsWith(PNG_HEADER));
+        base64Image = clampHeader(base64Image);
+        try {
+            decodeImage(base64Image);
+        } catch (IllegalArgumentException e) { return false; }
+        return isHeaderValid;
     }
 
     public static String clampHeader(String base64Image){
-        return (isValidFormat(base64Image) ? base64Image.split(",")[1] : null);
+        return (base64Image.split(",")[1]);
     }
 
     public static byte[] decodeImage(String clampedBase64Image){
@@ -30,4 +34,5 @@ public class ImageCoreUtils {
     public static int[] getDimensions(BufferedImage buffImage){
         return new int[]{buffImage.getWidth(), buffImage.getHeight()};
     }
+
 }

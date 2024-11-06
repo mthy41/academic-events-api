@@ -35,7 +35,7 @@ public class DataComplianceHandler {
         return !unhashedPassword.contains(" ");
     }
 
-    public static boolean checkUserImage(String base64Image) throws Exception {
+    public static boolean checkUserImage(String base64Image){
         if(!ImageCoreUtils.isValidFormat(base64Image)){ return false; }
 
         base64Image = ImageCoreUtils.clampHeader(base64Image);
@@ -43,10 +43,15 @@ public class DataComplianceHandler {
 
         if(decodedImage.length > MAX_PFP_IMAGE_SIZE){ return false; }
 
-        int imageWidth = ImageCoreUtils.getDimensions(ImageCoreUtils.getImage(decodedImage))[0];
-        int imageHeight = ImageCoreUtils.getDimensions(ImageCoreUtils.getImage(decodedImage))[1];
+        int imageWidth = 0;
+        int imageHeight = 0;
+        try {
+            if(ImageCoreUtils.getImage(decodedImage) == null){ return false; }
+            imageWidth = ImageCoreUtils.getDimensions(ImageCoreUtils.getImage(decodedImage))[0];
+            imageHeight = ImageCoreUtils.getDimensions(ImageCoreUtils.getImage(decodedImage))[1];
+        } catch (Exception e) { throw new RuntimeException(e); }
 
         if(imageWidth != imageHeight){ return false; }
-        return imageWidth > MAX_PFP_WIDTH;
+        return imageWidth < MAX_PFP_WIDTH;
     }
 }

@@ -55,7 +55,7 @@ public class UserHandlers {
     public static ResponseEntity<?> updateUserData(Map<String, String> attributesPackage){
         Map<String, String> response = new HashMap<>();
 
-        List<String> validKeys = Arrays.asList("userCpf", "nome", "email", "rua", "numero", "bairro", "cidade", "estado");
+        List<String> validKeys = Arrays.asList("userCpf", "nome", "email", "rua", "numero", "bairro", "cidade", "estado", "foto");
         if(!new HashSet<>(validKeys).containsAll(attributesPackage.keySet())){
            response.put("error", "Ouve um erro ao serializar os dados.");
            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -71,6 +71,12 @@ public class UserHandlers {
                     response.put("error", "Nome inserido contém caracteres inválidos.");
                     return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
                 } cleanedPackage.put(key, value); continue; }
+            if(key.equals("foto")){
+                if(!DataComplianceHandler.checkUserImage(value)){
+                    response.put("error", "Imagem inserida é inválida.");
+                    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                } cleanedPackage.put(key, value); continue;
+            }
             if(key.equals("userCpf")){
                 if(!DataComplianceHandler.checkCpf(value)){
                     response.put("error", "CPF inserido é inválido.");
