@@ -24,6 +24,7 @@ public class GlobalErrorHandler {
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler()
     public ResponseEntity<Map<String, String>> handleException(EventAlreadyExistsError e) {
         Map<String, String> response = new HashMap<>();
         response.put("error", e.getMessage());

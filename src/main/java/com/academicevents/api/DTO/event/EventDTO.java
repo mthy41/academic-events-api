@@ -12,23 +12,40 @@ public class EventDTO {
     public String instituicao;
     public Date datainicio;
     public Date datafim;
+    public String banner;
+    public String miniatura;
     public String rua;
     public String numero;
     public String bairro;
     public String cidade;
     public String estado;
 
-    public EventDTO(String nome, String codigo, String instituicao, Date datainicio, Date datafim, String rua, String numero, String bairro, String cidade, String estado) {
-        this.nome = nome;
+    public EventDTO() { }
+
+    public EventDTO(String codigo, String nome, String instituicao, Date datainicio, Date datafim, String banner, String miniatura, String rua, String numero, String bairro, String cidade, String estado) {
         this.codigo = codigo;
+        this.nome = nome;
         this.instituicao = instituicao;
         this.datainicio = datainicio;
         this.datafim = datafim;
+        this.banner = banner;
+        this.miniatura = miniatura;
         this.rua = rua;
         this.numero = numero;
         this.bairro = bairro;
         this.cidade = cidade;
         this.estado = estado;
+    }
+
+    public EventDTO(String nome, String instituicao, Date datainicio, Date datafim, String banner, String miniatura, String rua, String numero, String bairro, String cidade, String estado) {
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getNome() {
@@ -61,6 +78,22 @@ public class EventDTO {
 
     public void setDatafim(Date datafim) {
         this.datafim = datafim;
+    }
+
+    public String getBanner() {
+        return banner;
+    }
+
+    public void setBanner(String banner) {
+        this.banner = banner;
+    }
+
+    public String getMiniatura() {
+        return miniatura;
+    }
+
+    public void setMiniatura(String miniatura) {
+        this.miniatura = miniatura;
     }
 
     public String getRua() {
@@ -103,17 +136,16 @@ public class EventDTO {
         this.estado = estado;
     }
 
-    public String getCodigo() { return codigo; }
-
-    public void setCodigo(String codigo) { this.codigo = codigo; }
-
     @Override
     public String toString() {
-        return "Event{" +
-                "nome='" + nome + '\'' +
+        return "EventDTO{" +
+                "codigo='" + codigo + '\'' +
+                ", nome='" + nome + '\'' +
                 ", instituicao='" + instituicao + '\'' +
-                ", datainicio='" + datainicio + '\'' +
-                ", datafim='" + datafim + '\'' +
+                ", datainicio=" + datainicio +
+                ", datafim=" + datafim +
+                ", banner='" + banner + '\'' +
+                ", miniatura='" + miniatura + '\'' +
                 ", rua='" + rua + '\'' +
                 ", numero='" + numero + '\'' +
                 ", bairro='" + bairro + '\'' +

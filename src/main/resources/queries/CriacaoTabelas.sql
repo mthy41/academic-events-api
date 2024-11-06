@@ -1,4 +1,3 @@
-CREATE TABLE Administrador(
 	CPF VARCHAR(11),
 	Nome VARCHAR(100),
 	Rua VARCHAR(100),

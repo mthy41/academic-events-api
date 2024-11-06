@@ -1,9 +1,11 @@
 package com.academicevents.api.DAO;
 
+import com.academicevents.api.DTO.event.EventListDTO;
 import com.academicevents.api.DTO.event.EventDTO;
 import com.academicevents.api.customerrors.EventNotExistsError;
 import com.academicevents.api.customerrors.ListingEventsError;
 import com.academicevents.api.customerrors.SubscribeGeneralErrors;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +25,7 @@ public class EventDAO {
         Connection connection = DB.getConnection();
         String uuid = UUID.randomUUID().toString().trim();
 
-        String queryEvento = "INSERT INTO evento (codigo, nome, datainicio, datafim, instituicao, rua, numero, bairro, cidade, estado) VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String queryEvento = "INSERT INTO evento (codigo, nome, datainicio, datafim, instituicao, rua, numero, bairro, cidade, estado, banner, miniatura) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement statement = connection.prepareStatement(queryEvento);
 
@@ -37,6 +39,8 @@ public class EventDAO {
             statement.setString(8, event.getBairro());
             statement.setString(9, event.getCidade());
             statement.setString(10, event.getEstado());
+            statement.setString(11, event.getBanner());
+            statement.setString(12, event.getMiniatura());
 
             statement.execute();
         } catch (SQLException e) {
@@ -116,6 +120,8 @@ public class EventDAO {
                         result.getString("instituicao"),
                         result.getDate("datainicio"),
                         result.getDate("datafim"),
+                        result.getString("banner"),
+                        result.getString("miniatura"),
                         result.getString("rua"),
                         result.getString("numero"),
                         result.getString("bairro"),
@@ -128,24 +134,28 @@ public class EventDAO {
         return null;
     }
 
-    public static ArrayList<EventDTO> listEvents() {
+    public static ArrayList<EventListDTO> listEvents() {
+        Connection conn = DB.getConnection();
         String query = "SELECT * FROM evento";
-        ArrayList<EventDTO> events = new ArrayList<>();
+        ArrayList<EventListDTO> events = new ArrayList<>();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             ResultSet result = statement.executeQuery();
             while(result.next()) {
-                events.add(new EventDTO(
+                EventListDTO event = new EventListDTO(
                         result.getString("nome"),
-                        result.getString("codigo"),
                         result.getString("instituicao"),
-                        result.getDate("datainicio"),
-                        result.getDate("datafim"),
+                        result.getDate("dataInicio"),
+                        result.getDate("dataFim"),
+                        result.getString("banner"),
+                        result.getString("miniatura"),
                         result.getString("rua"),
                         result.getString("numero"),
                         result.getString("bairro"),
                         result.getString("cidade"),
-                        result.getString("estado")));
+                        result.getString("estado")
+                );
+                events.add(event);
             }
         } catch (SQLException e ) {
             throw new ListingEventsError("Erro na listagem dos eventos");

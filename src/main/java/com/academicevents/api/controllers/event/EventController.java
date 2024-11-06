@@ -33,7 +33,7 @@ public class EventController {
     public ResponseEntity<?> subscribeEvent(@RequestBody SubscribeEventDTO event) {
         Map<String, String> response = new HashMap<>();
         if (EventHandlers.subscribeEvent(event)) {
-            response.put("message", "Inscricão realizada com sucesso!");
+            response.put("success", "Inscricão realizada com sucesso!");
         }
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
