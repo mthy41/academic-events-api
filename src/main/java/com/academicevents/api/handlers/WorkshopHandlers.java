@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class WorkshopHandlers {
-    public static ResponseEntity<?> saveWorkshop(WorkshopCreateDTO workshop) {
+    public static ResponseEntity<?> createWorkshop(WorkshopCreateDTO workshop) {
         Map<String, String> response = new HashMap<>();
 
         if (WorkshopDAO.checkWorkshopExistsByName(workshop)) {

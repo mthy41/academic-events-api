@@ -19,6 +19,7 @@ public class WorkshopDAO {
     }
 
     public static ResultSet searchWorkshopByName(WorkshopCreateDTO workshop) {
+        Connection conn = DB.getConnection();
         String query = "SELECT * FROM minicurso WHERE titulo = ?";
 
         try {
@@ -35,6 +36,7 @@ public class WorkshopDAO {
     }
 
     public static boolean checkWorkshopExistsByName(WorkshopCreateDTO workshop) {
+        Connection conn = DB.getConnection();
         String query = "SELECT * FROM minicurso WHERE titulo = ?";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
@@ -47,6 +49,7 @@ public class WorkshopDAO {
     }
 
     public static boolean saveWorkshop(WorkshopCreateDTO workshop) {
+        Connection conn = DB.getConnection();
         String query = "INSERT INTO minicurso (codigo, banner, codigo_evento, titulo, descricao, datainicio, datafim, status, qtddparticipantes) VALUES (?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
