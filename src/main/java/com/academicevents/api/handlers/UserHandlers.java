@@ -66,26 +66,34 @@ public class UserHandlers {
             String value = attributesPackage.get(key);
 
             //manual check for special attributes.
-            if(key.equals("nome")){
-                if(!DataComplianceHandler.checkUserName(value)){
-                    response.put("error", "Nome inserido contém caracteres inválidos.");
-                    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-                } cleanedPackage.put(key, value); continue; }
-            if(key.equals("foto")){
-                if(!DataComplianceHandler.checkUserImage(value)){
-                    response.put("error", "Imagem inserida é inválida.");
-                    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-                } cleanedPackage.put(key, value); continue;
-            }
-            if(key.equals("userCpf")){
-                if(!DataComplianceHandler.checkCpf(value)){
-                    response.put("error", "CPF inserido é inválido.");
-                    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+            switch (key) {
+                case "nome" -> {
+                    if (!DataComplianceHandler.checkUserName(value)) {
+                        response.put("error", "Nome inserido contém caracteres inválidos.");
+                        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                    }
+                    cleanedPackage.put(key, value);
+                    continue;
                 }
-                if(!UserDAO.searchUserByCpf(value)){
-                    response.put("error", "CPF inserido não pertence à nenhum usuário.");
-                    return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
-                } continue;
+                case "foto" -> {
+                    if (!DataComplianceHandler.checkUserImage(value)) {
+                        response.put("error", "Imagem inserida é inválida.");
+                        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                    }
+                    cleanedPackage.put(key, value);
+                    continue;
+                }
+                case "userCpf" -> {
+                    if (!DataComplianceHandler.checkCpf(value)) {
+                        response.put("error", "CPF inserido é inválido.");
+                        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                    }
+                    if (!UserDAO.searchUserByCpf(value)) {
+                        response.put("error", "CPF inserido não pertence à nenhum usuário.");
+                        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+                    }
+                    continue;
+                }
             }
 
             if(!value.isBlank()){ cleanedPackage.put(key, value); }
