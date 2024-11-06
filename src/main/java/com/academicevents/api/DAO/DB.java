@@ -18,10 +18,10 @@ public class DB {
     public static Connection getConnection() {
         try {
             for (Connection c : connections) {
-                System.out.println("--------------------------");
-                System.out.println(c);
-                System.out.println("pool size" + connections.size());
-                System.out.println("Connection is closed: " + c.isClosed());
+//                System.out.println("--------------------------");
+//                System.out.println(c);
+//                System.out.println("pool size" + connections.size());
+//                System.out.println("Connection is closed: " + c.isClosed());
             }
             for (Connection c : connections) {
                 if (c != null && !c.isClosed()) {

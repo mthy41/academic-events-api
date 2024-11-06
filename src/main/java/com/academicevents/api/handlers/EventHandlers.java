@@ -2,22 +2,17 @@ package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.EventDAO;
 import com.academicevents.api.DAO.PresenceListDAO;
+import com.academicevents.api.DTO.event.EventListDTO;
 import com.academicevents.api.DTO.event.DeleteEventDTO;
 import com.academicevents.api.DTO.event.EventDTO;
 import com.academicevents.api.DTO.event.SearchEventDTO;
 import com.academicevents.api.DTO.event.SubscribeEventDTO;
-import com.academicevents.api.customerrors.EventNotExistsError;
-import com.academicevents.api.customerrors.UserAlreadySubscribedError;
-import com.academicevents.api.customerrors.UserNotFoundError;
-import com.academicevents.api.customerrors.WrongCredentialsError;
+import com.academicevents.api.customerrors.*;
 import com.academicevents.api.models.PresenceList;
-import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,8 +21,9 @@ import java.util.UUID;
 @Service
 public class EventHandlers {
     public static ResponseEntity<?> createEvent(EventDTO event) {
+        Map<String, String> response = new HashMap<>();
         if (EventDAO.searchEventByName(event.getNome())) {
-            return new ResponseEntity<>("Erro ao criar o evento. Evento já existente.", HttpStatus.BAD_REQUEST);
+            throw new EventAlreadyExistsError("Erro ao criar o evento. Evento já existente.");
         }
         if (!EventDAO.saveEvent(event)) {
             return new ResponseEntity<>("Erro ao criar o evento.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -41,7 +37,9 @@ public class EventHandlers {
             return new ResponseEntity<>("Erro ao criar a lista de presença.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>("Evento criado com sucesso!", HttpStatus.OK);
+        response.put("success", "Evento criado com sucesso!");
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     public static ResponseEntity<?> deleteEvent(DeleteEventDTO event) {
@@ -62,10 +60,10 @@ public class EventHandlers {
     }
 
     public static ResponseEntity<?> listEvents() {
+        HashMap<String, ArrayList<EventListDTO>> response = new HashMap<>();
         try {
-            Map<String, ArrayList<EventDTO>> responseOK = new HashMap<>();
-            responseOK.put("events", EventDAO.listEvents());
-            return new ResponseEntity<>(responseOK, HttpStatus.OK);
+            response.put("events", EventDAO.listEvents());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             Map<String, String> responseError = new HashMap<>();
             responseError.put("error", e.getMessage());
@@ -91,6 +89,7 @@ public class EventHandlers {
             throw new UserAlreadySubscribedError("Participante ja está inscrito.");
         }
 
+        System.out.println(eventCode);
         String lpEventCode = EventDAO.getLpEventCode(eventCode);
         if(EventDAO.subscribeEvent(lpEventCode, eventCode, subscription.getCpfParticipante())) {
             return true;
