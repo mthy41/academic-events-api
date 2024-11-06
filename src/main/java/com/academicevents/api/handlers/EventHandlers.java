@@ -5,12 +5,19 @@ import com.academicevents.api.DAO.PresenceListDAO;
 import com.academicevents.api.DTO.event.DeleteEventDTO;
 import com.academicevents.api.DTO.event.EventDTO;
 import com.academicevents.api.DTO.event.SearchEventDTO;
+import com.academicevents.api.DTO.event.SubscribeEventDTO;
 import com.academicevents.api.customerrors.EventNotExistsError;
+import com.academicevents.api.customerrors.UserAlreadySubscribedError;
+import com.academicevents.api.customerrors.UserNotFoundError;
+import com.academicevents.api.customerrors.WrongCredentialsError;
 import com.academicevents.api.models.PresenceList;
+import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +25,7 @@ import java.util.UUID;
 
 @Service
 public class EventHandlers {
-    public static ResponseEntity<?> saveEvent(EventDTO event) {
+    public static ResponseEntity<?> createEvent(EventDTO event) {
         if (EventDAO.searchEventByName(event.getNome())) {
             return new ResponseEntity<>("Erro ao criar o evento. Evento já existente.", HttpStatus.BAD_REQUEST);
         }
@@ -64,5 +71,31 @@ public class EventHandlers {
             responseError.put("error", e.getMessage());
             return new ResponseEntity<>(responseError, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public static boolean subscribeEvent(SubscribeEventDTO subscription) {
+        if (!UserHandlers.checkIfUserExistsByCpf(subscription.getCpfParticipante())) {
+            throw new UserNotFoundError("CPF não encontrado");
+        }
+
+        if (!UserHandlers.checkIfEmailBelongsToUser(subscription.getCpfParticipante(), subscription.getEmailParticipante())) {
+            throw new WrongCredentialsError("Email pertence à outro usuário");
+        }
+
+        if (!EventDAO.checkIfEventExistsByName(subscription.getNomeEvento())) {
+            throw new EventNotExistsError("Evento inexistente! Verifique o nome do evento e tente novamente.");
+        }
+
+        String eventCode = EventDAO.searchCodeByName(subscription.getNomeEvento());
+        if (PresenceListDAO.checkIfUserIsSubscribed(eventCode, subscription.getCpfParticipante())) {
+            throw new UserAlreadySubscribedError("Participante ja está inscrito.");
+        }
+
+        String lpEventCode = EventDAO.getLpEventCode(eventCode);
+        if(EventDAO.subscribeEvent(lpEventCode, eventCode, subscription.getCpfParticipante())) {
+            return true;
+        }
+
+        return false;
     }
 }

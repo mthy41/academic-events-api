@@ -30,12 +30,17 @@ public class UserHandlers {
 
     public static ResponseEntity<?> deleteUser(DeleteUserDTO user) {
         Map<String, String> response = new HashMap<>();
+
         if (UserDAO.searchUserByCpf(user.getCpf()) && UserDAO.deleteUser(user.getCpf()))    {
             response.put("success", "Usuário deletado com sucesso!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         response.put("error", "Erro ao deletar o usuário");
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    public static boolean checkIfUserExistsByCpf(String userCpf){
+        return UserDAO.searchUserByCpf(userCpf);
     }
 
     public static boolean getUserByCpf(Map<String, String> user){
@@ -93,5 +98,10 @@ public class UserHandlers {
 
         response.put("success", "Dados atualizados com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    public static boolean checkIfEmailBelongsToUser(String cpfParticipante, String emailParticipante) {
+        User user = UserDAO.getUserByCpf(cpfParticipante);
+        return user.getEmail().equals(emailParticipante);
     }
 }

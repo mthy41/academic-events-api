@@ -12,7 +12,7 @@ public class WorkshopController {
 
     @PostMapping("/create/workshop")
     public ResponseEntity<?> createWorkshop(WorkshopCreateDTO workshop) {
-        return WorkshopHandlers.saveWorkshop(workshop);
+        return WorkshopHandlers.createWorkshop(workshop);
     }
 
     @PostMapping("list/workshop")

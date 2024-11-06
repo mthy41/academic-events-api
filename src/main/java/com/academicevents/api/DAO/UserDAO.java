@@ -3,6 +3,7 @@ package com.academicevents.api.DAO;
 import com.academicevents.api.DTO.user.UserProfileDTO;
 import com.academicevents.api.builders.UserFactory;
 import com.academicevents.api.customerrors.UserNotFoundError;
+import com.academicevents.api.customerrors.WrongCredentialsError;
 import com.academicevents.api.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class UserDAO {
             searchResult = result.next();
             DB.closeConnection();
         } catch (SQLException e ) {
-            throw new RuntimeException(e);
+            throw new WrongCredentialsError("Credenciais erradas ou invalidas");
         }
         return searchResult;
     }
@@ -93,6 +94,7 @@ public class UserDAO {
     }
 
     public static boolean deleteUser(String cpf) {
+        System.err.println("Cpf: " + cpf);
         conn = DB.getConnection();
         String query = "DELETE FROM administrador WHERE cpf = ?";
         try {
