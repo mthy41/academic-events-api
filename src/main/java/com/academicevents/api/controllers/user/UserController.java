@@ -15,9 +15,7 @@ import java.util.Map;
 public class UserController {
 
     @PostMapping("/login")
-    public ResponseEntity<?> SingIn(@RequestBody LoginUserDataDTO user) {
-        return LoginUser.getUserByCpf(user);
-    }
+    public ResponseEntity<?> SingIn(@RequestBody LoginUserDataDTO user) { return LoginUser.getUserByCpf(user); }
 
     @PostMapping("/create/user")
     public ResponseEntity<?> SignUp(@RequestBody User user) {

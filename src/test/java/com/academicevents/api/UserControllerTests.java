@@ -89,8 +89,8 @@ class UserControllerTests {
         mockMvc.perform(delete("/delete/user")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(user)))
-                .andExpect(jsonPath("error").value("Erro ao deletar o usuário"))
-                .andExpect(status().isInternalServerError());
+                .andExpect(jsonPath("error").value("Usuário não encontrado"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
@@ -100,7 +100,7 @@ class UserControllerTests {
         mockMvc.perform(delete("/delete/user")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(user)))
-                .andExpect(jsonPath("error").value("Erro ao deletar o usuário"))
-                .andExpect(status().isInternalServerError());
+                .andExpect(jsonPath("error").value("Entrada de dados inválida ou nula"))
+                .andExpect(status().isBadRequest());
     }
 }

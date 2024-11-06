@@ -25,6 +25,13 @@ public class GlobalErrorHandler {
     }
 
     @ExceptionHandler()
+    public ResponseEntity<Map<String, String>> invalidInputDataError(InvalidInputDataError a) {
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "Entrada de dados inválida ou nula");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler()
     public ResponseEntity<Map<String, String>> handleException(EventAlreadyExistsError e) {
         Map<String, String> response = new HashMap<>();
         response.put("error", e.getMessage());
