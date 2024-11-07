@@ -33,7 +33,7 @@ public class UserHandlers {
     public static ResponseEntity<?> deleteUser(DeleteUserDTO user) {
         Map<String, String> response = new HashMap<>();
 
-        if (user.getCpf().length() == 0 || user.getCpf().equals("") || user.getCpf() == null) {
+        if (user.getCpf() == null || user.getCpf().isBlank()) {
             throw new InvalidInputDataError("CPF nulo ou inválido.");
         }
 
