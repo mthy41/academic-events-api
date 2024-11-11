@@ -34,6 +34,7 @@ public class LoginUser {
         response.put("nome", loggedUser.getNome());
         response.put("email", loggedUser.getEmail());
         response.put("foto", loggedUser.getFoto());
+        response.put("telefone", loggedUser.getTelefone());
         response.put("cpf", loggedUser.getCpf());
         response.put("rua", loggedUser.getRua());
         response.put("numero", loggedUser.getNumero());

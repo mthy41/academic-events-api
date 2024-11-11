@@ -4,6 +4,7 @@ public class UserProfileDTO {
     private String nome;
     private String email;
     private String foto;
+    private String telefone;
     private String cpf;
     private String rua;
     private String numero;
@@ -12,10 +13,11 @@ public class UserProfileDTO {
     private String estado;
     private String role;
 
-    public UserProfileDTO(String nome, String email, String foto, String cpf, String rua, String numero, String bairro, String cidade, String estado, String role) {
+    public UserProfileDTO(String nome, String email, String foto, String telefone, String cpf, String rua, String numero, String bairro, String cidade, String estado, String role) {
         this.nome = nome;
         this.email = email;
         this.foto = foto;
+        this.telefone = telefone;
         this.cpf = cpf;
         this.rua = rua;
         this.numero = numero;
@@ -23,6 +25,14 @@ public class UserProfileDTO {
         this.cidade = cidade;
         this.estado = estado;
         this.role = role;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
     public String getNome() {

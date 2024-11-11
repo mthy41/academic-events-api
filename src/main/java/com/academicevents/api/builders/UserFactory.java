@@ -16,6 +16,9 @@ public class UserFactory {
                 default -> null;
             };
 
+            // criar metodo para buscar telefone nas novas tabelas com base no cpf.
+            // inserir o telefone no construtor
+
             return new User(
                     userSet.getString("nome"),
                     userSet.getString("foto"),

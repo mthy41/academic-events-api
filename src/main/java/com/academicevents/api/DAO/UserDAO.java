@@ -8,6 +8,7 @@ import com.academicevents.api.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.table.TableRowSorter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -49,31 +50,46 @@ public class UserDAO {
         conn = DB.getConnection();
 
         String userType = user.getRole().getDisplayName();
-        String query;
-        if (userType.equals("PARTICIPANT")) {
-            query = "INSERT INTO " + userType + " (cpf, foto, nome, telefone, email, senha, rua, numero, bairro, cidade, estado, role) " + "VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?)";
+        System.out.println(userType);
+        String phoneQuery = "";
+        String query = "INSERT INTO " + userType + " (cpf, foto, nome, email, senha, rua, numero, bairro, cidade, estado, role) " + "VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?)";
             try {
                 PreparedStatement statement =  conn.prepareStatement(query);
                 statement.setString(1, user.getCpf());
                 statement.setString(2, user.getFoto());
                 statement.setString(3, user.getNome());
-                statement.setString(4, user.getTelefone());
-                statement.setString(5, user.getEmail());
-                statement.setString(6, user.getPassword());
-                statement.setString(7, user.getRua());
-                statement.setString(8, user.getNumero());
-                statement.setString(9, user.getBairro());
-                statement.setString(10, user.getCidade());
-                statement.setString(11, user.getEstado());
-                statement.setString(12, user.getRole().getDisplayName());
+                statement.setString(4, user.getEmail());
+                statement.setString(5, user.getPassword());
+                statement.setString(6, user.getRua());
+                statement.setString(7, user.getNumero());
+                statement.setString(8, user.getBairro());
+                statement.setString(9, user.getCidade());
+                statement.setString(10, user.getEstado());
+                statement.setString(11, user.getRole().getDisplayName());
                 statement.execute();
-                DB.closeConnection();
+
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
                 throw new RuntimeException(e);
             }
-        }
-        return true;
+        System.out.println(userType);
+
+            if (userType.equals("administrador")) {
+
+                phoneQuery = "INSERT INTO telefoneadmin (telefone, cpf_admin) VALUES (?,?)";
+            } else if(userType.equals("professor")) {
+                phoneQuery = "INSERT INTO telefoneprof (telefone, cpf_prof) VALUES (?,?)";
+            }
+
+            try {
+                PreparedStatement preparedStatement = conn.prepareStatement(phoneQuery);
+                preparedStatement.setString(1, user.getTelefone());
+                preparedStatement.setString(2, user.getCpf());
+                preparedStatement.execute();
+                return true;
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
     }
 
     public static User getUserByCpf(String cpf){
@@ -167,6 +183,7 @@ public class UserDAO {
                     result.getString("nome"),
                     result.getString("email"),
                     result.getString("foto"),
+                    result.getString("telefone"),
                     result.getString("cpf"),
                     result.getString("rua"),
                     result.getString("numero"),
