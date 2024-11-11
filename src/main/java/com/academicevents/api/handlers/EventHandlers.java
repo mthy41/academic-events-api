@@ -2,13 +2,9 @@ package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.EventDAO;
 import com.academicevents.api.DAO.PresenceListDAO;
-import com.academicevents.api.DTO.event.EventListDTO;
-import com.academicevents.api.DTO.event.DeleteEventDTO;
-import com.academicevents.api.DTO.event.EventDTO;
-import com.academicevents.api.DTO.event.SearchEventDTO;
-import com.academicevents.api.DTO.event.SubscribeEventDTO;
+import com.academicevents.api.DTO.event.*;
 import com.academicevents.api.customerrors.*;
-import com.academicevents.api.models.PresenceList;
+import com.academicevents.api.models.Lecture;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,11 +25,11 @@ public class EventHandlers {
             return new ResponseEntity<>("Erro ao criar o evento.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        String presenceListCode = UUID.randomUUID().toString();
+        String lectureCode = UUID.randomUUID().toString();
         String eventCode = EventDAO.searchCodeByName(event.getNome());
-        PresenceList presenceList = new PresenceList(presenceListCode, eventCode);
+        Lecture lecture = new Lecture(lectureCode, eventCode);
 
-        if(!PresenceListDAO.savePresenceList(presenceList)) {
+        if(!PresenceListDAO.savePresenceList(lecture)) {
             return new ResponseEntity<>("Erro ao criar a lista de presença.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

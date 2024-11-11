@@ -2,7 +2,7 @@ package com.academicevents.api.DAO;
 
 import com.academicevents.api.customerrors.PresenceListNotFoundError;
 import com.academicevents.api.customerrors.SubscribeGeneralErrors;
-import com.academicevents.api.models.PresenceList;
+import com.academicevents.api.models.Lecture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +16,13 @@ public class PresenceListDAO {
     @Autowired
     static Connection conn = DB.getConnection();
 
-    public static boolean savePresenceList(PresenceList list) {
+    public static boolean savePresenceList(Lecture list) {
         Connection conn = DB.getConnection();
-        String query = "INSERT INTO lpevento (codigo) VALUES (?)";
+        String query = "INSERT INTO palestra (codigo, codigo_ev) VALUES (?,?)";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, list.getCod());
+            statement.setString(2, list.codEvento);
             statement.execute();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
