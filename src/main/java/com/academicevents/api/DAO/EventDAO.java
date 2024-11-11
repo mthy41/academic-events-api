@@ -126,7 +126,7 @@ public class EventDAO {
     public static ArrayList<EventListDTO> listEvents() {
         Connection conn = DB.getConnection();
         String query = "SELECT * FROM evento";
-        ArrayList<EventListDTO> events = new ArrayList<>();.
+        ArrayList<EventListDTO> events = new ArrayList<>();
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             ResultSet result = statement.executeQuery();
