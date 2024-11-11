@@ -61,7 +61,7 @@ class UserControllerTests {
 
     @Test
     void attemptCreateUserWithValidDataShouldReturnSuccess() throws Exception {
-        User user = new User("SPRINGTESTCASE", "springtestcase", "springtestcase@springtestcase.com", "spring123123", "99999999999", "springtestcase", "99", "springtestcase", "springtestcase", "springtestcase", ROLES.ADM);
+        User user = new User("SPRINGTESTCASE", "springtestcase", "springtestcase@springtestcase.com", "123123123", "spring123123", "99999999999", "springtestcase", "99", "springtestcase", "springtestcase", "springtestcase", ROLES.ADM);
 
         mockMvc.perform(post("/create/user")
                 .contentType("application/json")

@@ -2,6 +2,7 @@ package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.EventDAO;
 import com.academicevents.api.DAO.PresenceListDAO;
+import com.academicevents.api.DTO.EventCheckinDataDTO;
 import com.academicevents.api.DTO.event.*;
 import com.academicevents.api.customerrors.*;
 import com.academicevents.api.models.Lecture;
@@ -27,7 +28,7 @@ public class EventHandlers {
 
         String lectureCode = UUID.randomUUID().toString();
         String eventCode = EventDAO.searchCodeByName(event.getNome());
-        Lecture lecture = new Lecture(lectureCode, eventCode);
+        Lecture lecture = new Lecture(lectureCode, eventCode, event.getNome());
 
         if(!PresenceListDAO.savePresenceList(lecture)) {
             return new ResponseEntity<>("Erro ao criar a lista de presença.", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -92,5 +93,30 @@ public class EventHandlers {
         }
 
         return false;
+    }
+
+    public static boolean checkinEvent(EventCheckinDataDTO eventCheckinDataDTO) {
+        if (!UserHandlers.checkIfUserExistsByCpf(eventCheckinDataDTO.getCpfParticipante())) {
+            throw new UserNotFoundError("CPF não encontrado.");
+        }
+
+        if (!EventDAO.checkIfEventExistsByName(eventCheckinDataDTO.getNomeEvento())) {
+            throw new EventNotExistsError("Evento inexistente! Verifique o nome do evento e tente novamente.");
+        }
+
+        String eventCode = EventDAO.searchCodeByName(eventCheckinDataDTO.getNomeEvento());
+        System.out.println("codigo do evento");
+        System.out.println(eventCode);
+        if(!EventDAO.checkIfLectureExistsByEventCode(eventCode)) {
+            throw new CheckinEventError("Não foi possível encontrar a lista de presenca pelo codigo do evento.");
+        }
+        System.out.println("tudo ok!");
+
+        String lectureCode = EventDAO.getLectureCode(eventCode);
+
+        if(!EventDAO.checkinEventWithCPFAndEventName(eventCode, eventCheckinDataDTO.getCpfParticipante(), lectureCode)) {
+            throw new CheckinEventError("Houve algum erro ao realizar o checkin.");
+        }
+        return true;
     }
 }

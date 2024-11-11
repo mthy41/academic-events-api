@@ -18,11 +18,12 @@ public class PresenceListDAO {
 
     public static boolean savePresenceList(Lecture list) {
         Connection conn = DB.getConnection();
-        String query = "INSERT INTO palestra (codigo, codigo_ev) VALUES (?,?)";
+        String query = "INSERT INTO palestra (codigo, codigo_ev, tema) VALUES (?,?,?)";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, list.getCod());
             statement.setString(2, list.codEvento);
+            statement.setString(3, "Palestra - "  + list.getEventName());
             statement.execute();
         } catch (SQLException e) {
             System.err.println(e.getMessage());

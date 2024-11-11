@@ -1,7 +1,9 @@
 package com.academicevents.api.DAO;
 
+import com.academicevents.api.DTO.EventCheckinDataDTO;
 import com.academicevents.api.DTO.event.EventListDTO;
 import com.academicevents.api.DTO.event.EventDTO;
+import com.academicevents.api.customerrors.CheckinEventError;
 import com.academicevents.api.customerrors.EventNotExistsError;
 import com.academicevents.api.customerrors.ListingEventsError;
 import com.academicevents.api.customerrors.SubscribeGeneralErrors;
@@ -81,19 +83,6 @@ public class EventDAO {
         return null;
     }
 
-    public static int getEventLastId() {
-        String query = "SELECT codigo FROM evento ORDER BY codigo DESC LIMIT 1";
-        try {
-            PreparedStatement statement = connection.prepareStatement(query);
-            ResultSet result = statement.executeQuery();
-            if(result.next()) {
-                return result.getInt("codigo");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return 0;
-    }
 
     public static boolean deleteEvent(String nome) {
         String query = "DELETE FROM evento WHERE nome = ?";
@@ -205,6 +194,55 @@ public class EventDAO {
             }
         } catch (SQLException e) {
             throw new SubscribeGeneralErrors("Erro buscando código da lista de presença do evento.");
+        }
+        return null;
+    }
+
+    public static boolean checkIfLectureExistsByEventCode(String eventCode) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT * FROM palestra WHERE codigo_ev = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, eventCode);
+            ResultSet resultSet = statement.executeQuery();
+            if(resultSet.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    public static boolean checkinEventWithCPFAndEventName(String codEvento, String CPFparticipante, String codigoPalestra) {
+        Connection conn = DB.getConnection();
+        String query = "INSERT INTO participa_palestra (codigo_ev, cpf_participante, codigo_palestra) VALUES (?,?,?)";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, codEvento);
+            preparedStatement.setString(2, CPFparticipante);
+            preparedStatement.setString(3, codigoPalestra);
+            preparedStatement.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw new CheckinEventError("Erro inserindo o participante na lista de checkin");
+        }
+    }
+
+    public static String getLectureCode(String eventCode) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT codigo FROM palestra WHERE codigo_ev = ?";
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, eventCode);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("codigo");
+            }
+        } catch (SQLException e) {
+            throw new CheckinEventError("Erro buscando o código da palestra");
         }
         return null;
     }

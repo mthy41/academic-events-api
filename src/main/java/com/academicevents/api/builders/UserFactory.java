@@ -20,6 +20,7 @@ public class UserFactory {
                     userSet.getString("nome"),
                     userSet.getString("foto"),
                     userSet.getString("email"),
+                    userSet.getString("telefone"),
                     userSet.getString("senha"),
                     userSet.getString("cpf"),
                     userSet.getString("rua"),

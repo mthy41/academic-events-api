@@ -6,6 +6,7 @@ public class User {
     public String nome;
     public String email;
     public String foto;
+    public String telefone;
     public String password;
     public String cpf;
     public String rua;
@@ -15,10 +16,11 @@ public class User {
     public String estado;
     public ROLES role;
 
-    public User(String nome, String foto, String email, String password, String cpf, String rua, String numero, String bairro, String cidade, String estado, ROLES role) {
+    public User(String nome, String foto, String email, String telefone, String password, String cpf, String rua, String numero, String bairro, String cidade, String estado, ROLES role) {
         this.nome = nome;
         this.email = email;
         this.password = password;
+        this.telefone = telefone;
         this.cpf = cpf;
         this.rua = rua;
         this.numero = numero;
@@ -27,6 +29,14 @@ public class User {
         this.estado = estado;
         this.role = role;
         this.foto = foto;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
     }
 
     public String getNome() {
