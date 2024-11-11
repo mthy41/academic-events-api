@@ -147,6 +147,7 @@ public class EventDAO {
                 events.add(event);
             }
         } catch (SQLException e ) {
+            System.out.println(e);
             throw new ListingEventsError("Erro na listagem dos eventos");
         }
         return events;
