@@ -18,6 +18,11 @@ public class UserHandlers {
     public static ResponseEntity<?> saveUser(User user) {
         Map<String, String> response = new HashMap<>();
 
+        if(user.getTelefone() == null || user.getTelefone().isEmpty()){
+            response.put("error", "Erro ao persistir usuário: Telefone inserido inválido.");
+            return  new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         user.setPassword(HashPasswordHandler.hashPassword(user.getPassword()));
         if(UserDAO.searchUserByCpf(user.getCpf())) {
             throw new UserAlreadyExistsError("Usuário já existente");
