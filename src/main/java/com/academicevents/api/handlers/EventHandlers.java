@@ -2,7 +2,7 @@ package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.EventDAO;
 import com.academicevents.api.DAO.PresenceListDAO;
-import com.academicevents.api.DTO.EventCheckinDataDTO;
+import com.academicevents.api.DTO.SubscribeEventDTO;
 import com.academicevents.api.DTO.event.*;
 import com.academicevents.api.customerrors.*;
 import com.academicevents.api.models.Lecture;
@@ -68,7 +68,7 @@ public class EventHandlers {
         }
     }
 
-    public static boolean subscribeEvent(SubscribeEventDTO subscription) {
+    public static boolean subscribeEvent(com.academicevents.api.DTO.event.SubscribeEventDTO subscription) {
         if (!UserHandlers.checkIfUserExistsByCpf(subscription.getCpfParticipante())) {
             throw new UserNotFoundError("CPF não encontrado");
         }
@@ -88,14 +88,14 @@ public class EventHandlers {
 
         System.out.println(eventCode);
         String lpEventCode = EventDAO.getLpEventCode(eventCode);
-        if(EventDAO.subscribeEvent(lpEventCode, eventCode, subscription.getCpfParticipante())) {
+        if(EventDAO.subscribeEvent(eventCode, subscription.getCpfParticipante(), lpEventCode)) {
             return true;
         }
 
         return false;
     }
 
-    public static boolean checkinEvent(EventCheckinDataDTO eventCheckinDataDTO) {
+    public static boolean checkinEvent(SubscribeEventDTO eventCheckinDataDTO) {
         if (!UserHandlers.checkIfUserExistsByCpf(eventCheckinDataDTO.getCpfParticipante())) {
             throw new UserNotFoundError("CPF não encontrado.");
         }

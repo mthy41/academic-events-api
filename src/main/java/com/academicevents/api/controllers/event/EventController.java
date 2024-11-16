@@ -1,10 +1,9 @@
 package com.academicevents.api.controllers.event;
 
-import com.academicevents.api.DTO.EventCheckinDataDTO;
+import com.academicevents.api.DTO.SubscribeEventDTO;
 import com.academicevents.api.DTO.event.DeleteEventDTO;
 import com.academicevents.api.DTO.event.EventDTO;
 import com.academicevents.api.DTO.event.SearchEventDTO;
-import com.academicevents.api.DTO.event.SubscribeEventDTO;
 import com.academicevents.api.customerrors.CheckinEventError;
 import com.academicevents.api.handlers.EventHandlers;
 import org.springframework.http.HttpStatus;
@@ -31,22 +30,22 @@ public class EventController {
         return EventHandlers.listEvents();
     }
 
-    @PostMapping("subscribe/event")
-    public ResponseEntity<?> subscribeEvent(@RequestBody SubscribeEventDTO event) {
-        Map<String, String> response = new HashMap<>();
-        if (EventHandlers.subscribeEvent(event)) {
-            response.put("success", "Inscricão realizada com sucesso!");
-        }
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
+//    @PostMapping("subscribe/event")
+//    public ResponseEntity<?> subscribeEvent(@RequestBody SubscribeEventDTO event) {
+//        Map<String, String> response = new HashMap<>();
+//        if (EventHandlers.subscribeEvent(event)) {
+//            response.put("success", "Inscricão realizada com sucesso!");
+//        }
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
 
-    @PostMapping("checkin/event")
-    public ResponseEntity<?> checkinEvent(@RequestBody EventCheckinDataDTO eventCheckinData) {
+    @PostMapping("subscribe/event")
+    public ResponseEntity<?> checkinEvent(@RequestBody SubscribeEventDTO eventCheckinData) {
         Map<String, String> response = new HashMap<>();
         if (!EventHandlers.checkinEvent(eventCheckinData)) {
             throw new CheckinEventError("Erro ao realizar checkin. Consulte os dados e tente novamente.");
         }
-        response.put("success", "Checkin realizado com sucesso!");
+        response.put("success", "Inscrição realizada com sucesso!");
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

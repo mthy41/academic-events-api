@@ -1,13 +1,11 @@
 package com.academicevents.api.DAO;
 
-import com.academicevents.api.DTO.EventCheckinDataDTO;
 import com.academicevents.api.DTO.event.EventListDTO;
 import com.academicevents.api.DTO.event.EventDTO;
 import com.academicevents.api.customerrors.CheckinEventError;
 import com.academicevents.api.customerrors.EventNotExistsError;
 import com.academicevents.api.customerrors.ListingEventsError;
 import com.academicevents.api.customerrors.SubscribeGeneralErrors;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

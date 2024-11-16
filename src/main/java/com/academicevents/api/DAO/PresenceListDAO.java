@@ -32,32 +32,20 @@ public class PresenceListDAO {
         return true;
     }
 
-    public static int getPresenceListLastId() {
-        Connection conn = DB.getConnection();
-        String query = "SELECT codigo FROM lpevento ORDER BY codigo DESC LIMIT 1";
-        try {
-            PreparedStatement statement = conn.prepareStatement(query);
-            ResultSet result = statement.executeQuery();
-            if(result.next()) {
-                return result.getInt("codigo");
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return 0;
-    }
-
     public static boolean checkIfUserIsSubscribed(String eventCode, String cpfParticipante) {
         Connection conn = DB.getConnection();
-        String query = "SELECT * FROM contem_lpevento WHERE codevento = ? AND cpfparticipante = ?";
+        String query = "SELECT * FROM participa_palestra WHERE codigo_ev = ? AND cpf_participante = ?";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, eventCode);
             statement.setString(2, cpfParticipante);
+            System.err.println(eventCode);
+            System.err.println(cpfParticipante);
+            System.err.println(query);
             ResultSet result = statement.executeQuery();
             return result.next();
         } catch (SQLException e) {
-            throw new SubscribeGeneralErrors("Erro ao verificar se o participante esté participando do evento.");
+            throw new SubscribeGeneralErrors("Erro ao verificar se o participante está participando do evento.");
         }
     }
 }

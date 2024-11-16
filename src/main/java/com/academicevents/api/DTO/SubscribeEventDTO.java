@@ -1,10 +1,10 @@
 package com.academicevents.api.DTO;
 
-public class EventCheckinDataDTO {
+public class SubscribeEventDTO {
     private String nomeEvento;
     private String cpfParticipante;
 
-    public EventCheckinDataDTO(String nomeEvento, String cpfParticipante) {
+    public SubscribeEventDTO(String nomeEvento, String cpfParticipante) {
         this.nomeEvento = nomeEvento;
         this.cpfParticipante = cpfParticipante;
     }
