@@ -203,8 +203,10 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, cpf);
             ResultSet result = statement.executeQuery();
-            result.next();
-            return result.getString("telefone");
+            DB.closeConnection();
+            if(result.next()){
+                return result.getString("telefone");
+            }
         } catch (SQLException e ) {
             throw new RuntimeException(e);
         }
