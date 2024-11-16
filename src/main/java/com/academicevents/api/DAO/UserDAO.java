@@ -204,9 +204,7 @@ public class UserDAO {
             statement.setString(1, cpf);
             ResultSet result = statement.executeQuery();
             DB.closeConnection();
-            if(result.next()){
-                return result.getString("telefone");
-            }
+            return result.getString("telefone");
         } catch (SQLException e ) {
             throw new RuntimeException(e);
         }
