@@ -1,4 +1,6 @@
 package com.academicevents.api.builders;
+import com.academicevents.api.DAO.EventDAO;
+import com.academicevents.api.DAO.UserDAO;
 import com.academicevents.api.enums.ROLES;
 import com.academicevents.api.models.User;
 

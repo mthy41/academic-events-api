@@ -27,7 +27,7 @@ public class EventDAO {
         Connection connection = DB.getConnection();
         String uuid = UUID.randomUUID().toString().trim();
 
-        String queryEvento = "INSERT INTO evento (codigo, nome, datainicio, datafim, instituicao, rua, numero, bairro, cidade, estado, banner, miniatura) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+        String queryEvento = "INSERT INTO evento (codigo, nome, datainicio, datafim, instituicao, rua, numero, bairro, cidade, estado, banner, miniatura, descricao) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement statement = connection.prepareStatement(queryEvento);
 
@@ -43,6 +43,7 @@ public class EventDAO {
             statement.setString(10, event.getEstado());
             statement.setString(11, event.getBanner());
             statement.setString(12, event.getMiniatura());
+            statement.setString(13, event.getDescricao());
 
             statement.execute();
         } catch (SQLException e) {
@@ -106,6 +107,7 @@ public class EventDAO {
                 return new EventDTO(
                         result.getString("nome"),
                         result.getString("codigo"),
+                        result.getString("descricao"),
                         result.getString("instituicao"),
                         result.getDate("datainicio"),
                         result.getDate("datafim"),
@@ -134,6 +136,7 @@ public class EventDAO {
                 EventListDTO event = new EventListDTO(
                         result.getString("nome"),
                         result.getString("instituicao"),
+                        result.getString("descricao"),
                         result.getDate("dataInicio"),
                         result.getDate("dataFim"),
                         result.getString("banner"),

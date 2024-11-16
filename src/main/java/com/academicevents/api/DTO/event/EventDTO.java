@@ -9,6 +9,7 @@ public class EventDTO {
     private String codigo;
 
     public String nome;
+    public String descricao;
     public String instituicao;
     public Date datainicio;
     public Date datafim;
@@ -37,7 +38,28 @@ public class EventDTO {
         this.estado = estado;
     }
 
-    public EventDTO(String nome, String instituicao, Date datainicio, Date datafim, String banner, String miniatura, String rua, String numero, String bairro, String cidade, String estado) {
+    public EventDTO(String codigo, String nome, String descricao, String instituicao, Date datainicio, Date datafim, String banner, String miniatura, String rua, String numero, String bairro, String cidade, String estado) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.instituicao = instituicao;
+        this.datainicio = datainicio;
+        this.datafim = datafim;
+        this.banner = banner;
+        this.miniatura = miniatura;
+        this.rua = rua;
+        this.numero = numero;
+        this.bairro = bairro;
+        this.cidade = cidade;
+        this.estado = estado;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
     }
 
     public String getCodigo() {

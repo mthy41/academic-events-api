@@ -195,4 +195,18 @@ public class UserDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public static String getTelfoneByCpf(String cpf, String userType) {
+        conn = DB.getConnection();
+        String query = "SELECT telefone FROM " + userType + " WHERE cpf = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, cpf);
+            ResultSet result = statement.executeQuery();
+            result.next();
+            return result.getString("telefone");
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+    }
 }
