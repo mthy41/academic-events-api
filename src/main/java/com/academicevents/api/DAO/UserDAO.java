@@ -74,6 +74,7 @@ public class UserDAO {
             }
         System.out.println(userType);
 
+            phoneQuery = "INSERT INTO telefone_participante (telefone, cpfparticipante) VALUES (?, ?)";
             if (userType.equals("administrador")) {
 
                 phoneQuery = "INSERT INTO telefoneadmin (telefone, cpf_admin) VALUES (?,?)";
