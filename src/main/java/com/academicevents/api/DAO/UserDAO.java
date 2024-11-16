@@ -179,11 +179,13 @@ public class UserDAO {
             ResultSet result = statement.executeQuery();
             result.next();
 
+            String userTelefone = getTelfoneByCpf(cpf, result.getString("role"));
+
             return  new UserProfileDTO(
                     result.getString("nome"),
                     result.getString("email"),
                     result.getString("foto"),
-                    result.getString("telefone"),
+                    userTelefone,
                     result.getString("cpf"),
                     result.getString("rua"),
                     result.getString("numero"),
@@ -198,12 +200,18 @@ public class UserDAO {
 
     public static String getTelfoneByCpf(String cpf, String userType) {
         conn = DB.getConnection();
-        String query = "SELECT telefone FROM " + userType + " WHERE cpf = ?";
+        String query = switch (userType){
+            case "administrador" -> "SELECT telefone FROM " + "telefoneadmin" + " WHERE cpf_admin = ?";
+            case "professor" -> "SELECT telefone FROM " + "telefoneprof" + " WHERE cpf_prof = ?";
+            case "participante" -> "SELECT telefone FROM " + "telefone_participante" + " WHERE cpfparticipante = ?";
+            default -> throw new IllegalStateException("Unexpected value: " + userType);
+        };
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, cpf);
             ResultSet result = statement.executeQuery();
             result.next();
+            DB.closeConnection();
             return result.getString("telefone");
         } catch (SQLException e ) {
             throw new RuntimeException(e);

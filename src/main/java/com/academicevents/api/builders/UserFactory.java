@@ -17,15 +17,13 @@ public class UserFactory {
                 case "professor" -> ROLES.PROFESSOR;
                 default -> null;
             };
-
-            // criar metodo para buscar telefone nas novas tabelas com base no cpf.
-            // inserir o telefone no construtor
+            String userTelefone = UserDAO.getTelfoneByCpf(userSet.getString("cpf"), userRoleStr);
 
             return new User(
                     userSet.getString("nome"),
                     userSet.getString("foto"),
                     userSet.getString("email"),
-                    userSet.getString("telefone"),
+                    userTelefone,
                     userSet.getString("senha"),
                     userSet.getString("cpf"),
                     userSet.getString("rua"),
