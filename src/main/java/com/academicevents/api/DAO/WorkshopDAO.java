@@ -2,6 +2,7 @@ package com.academicevents.api.DAO;
 
 import com.academicevents.api.DTO.workshop.WorkshopCreateDTO;
 import com.academicevents.api.DTO.workshop.WorkshopInfoDTO;
+import com.academicevents.api.controllers.workshop.SubscribeWorkshopDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Connection;
@@ -124,5 +125,78 @@ public class WorkshopDAO {
         } catch (SQLException e ) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static boolean checkIfWorkshopExistsByName(String nomeWorkshop) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT * FROM minicurso WHERE titulo = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, nomeWorkshop);
+            ResultSet result = statement.executeQuery();
+            return result.next();
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean checkIfUserIsAlreadySubscribed(String cpf) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT * FROM participa_mc WHERE cpf_participante = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, cpf);
+            ResultSet result = statement.executeQuery();
+            return result.next();
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean subscribeWorkshop(SubscribeWorkshopDTO workshop, String codgigoMinicurso, String codigoEvento) {
+        Connection conn = DB.getConnection();
+        String query = "INSERT INTO participa_mc (cpf_participante, codigo_mc, codigo_ev) VALUES (?,?, ?)";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, workshop.getCpf());
+            statement.setString(2, codgigoMinicurso);
+            statement.setString(3, codigoEvento);
+            statement.execute();
+            return true;
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String getWorkshopCodeByName(String nomeWorkshop) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT codigo FROM minicurso WHERE titulo = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, nomeWorkshop);
+            ResultSet result = statement.executeQuery();
+            if(result.next()) {
+                return result.getString("codigo");
+            }
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    public static String getEventCodeByWorkshopName(String nomeWorkshop) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT codigo_evento FROM minicurso WHERE titulo = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, nomeWorkshop);
+            ResultSet result = statement.executeQuery();
+            if(result.next()) {
+                return result.getString("codigo_evento");
+            }
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 }

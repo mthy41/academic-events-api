@@ -1,11 +1,16 @@
 package com.academicevents.api.handlers;
 
 import com.academicevents.api.DAO.EventDAO;
+import com.academicevents.api.DAO.UserDAO;
 import com.academicevents.api.DAO.WorkshopDAO;
 import com.academicevents.api.DTO.event.EventDTO;
 import com.academicevents.api.DTO.workshop.WorkshopCreateDTO;
 import com.academicevents.api.DTO.workshop.WorkshopInfoDTO;
 import com.academicevents.api.DTO.workshop.WorkshopListByEventName;
+import com.academicevents.api.controllers.workshop.SubscribeWorkshopDTO;
+import com.academicevents.api.customerrors.EventNotExistsError;
+import com.academicevents.api.customerrors.UserAlreadySubscribedError;
+import com.academicevents.api.customerrors.UserNotFoundError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -55,5 +60,30 @@ public class WorkshopHandlers {
         workshops.forEach(workshop -> workshop.setEvento(workshopInfo.getNomeEvento()));
         response.put("workshops", workshops);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    public static boolean subscribeWorkshop(SubscribeWorkshopDTO workshop) {
+        if(!UserDAO.searchUserByCpf(workshop.getCpf())) {
+            throw new UserNotFoundError("Usuário nao encontrado");
+        }
+
+        if (!EventDAO.searchEventByName(workshop.getNomeEvento())) {
+            throw new EventNotExistsError("Evento inexistente! Verifique o nome do evento e tente novamente.");
+        }
+
+        if (!WorkshopDAO.checkIfWorkshopExistsByName(workshop.getNomeWorkshop())) {
+            throw new EventNotExistsError("Minicurso inexistente! Verifique o nome do minicurso e tente novamente.");
+        }
+
+        if (WorkshopDAO.checkIfUserIsAlreadySubscribed(workshop.getCpf())) {
+           throw new UserAlreadySubscribedError("Usuário ja inscrito no minicurso");
+        }
+
+        String eventCode = WorkshopDAO.getEventCodeByWorkshopName(workshop.getNomeWorkshop());
+        String workshopCode = WorkshopDAO.getWorkshopCodeByName(workshop.getNomeWorkshop());
+        if (!WorkshopDAO.subscribeWorkshop(workshop, workshopCode, eventCode)) {
+            return false;
+        }
+        return true;
     }
 }

@@ -6,6 +6,7 @@ import com.academicevents.api.DTO.SubscribeEventDTO;
 import com.academicevents.api.DTO.event.*;
 import com.academicevents.api.customerrors.*;
 import com.academicevents.api.models.Lecture;
+import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -118,5 +119,11 @@ public class EventHandlers {
             throw new CheckinEventError("Houve algum erro ao realizar o checkin.");
         }
         return true;
+    }
+
+    public static ArrayList<User> listSubscribedParticipansEvent(String eventName) {
+        String eventCode = EventDAO.searchCodeByName(eventName);
+
+        return EventDAO.listSubscribedParticipansEvent(eventCode);
     }
 }

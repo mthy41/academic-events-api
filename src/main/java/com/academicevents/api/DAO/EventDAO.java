@@ -6,6 +6,7 @@ import com.academicevents.api.customerrors.CheckinEventError;
 import com.academicevents.api.customerrors.EventNotExistsError;
 import com.academicevents.api.customerrors.ListingEventsError;
 import com.academicevents.api.customerrors.SubscribeGeneralErrors;
+import com.academicevents.api.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -247,5 +248,23 @@ public class EventDAO {
             throw new CheckinEventError("Erro buscando o código da palestra");
         }
         return null;
+    }
+
+    public static ArrayList<User> listSubscribedParticipansEvent(String eventCode) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT cpf_participante FROM participa_palestra WHERE codigo_ev = ?";
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, eventCode);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                User user = UserDAO.getUserByCpf(resultSet.getString("cpf_participante"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return users;
     }
 }
