@@ -23,7 +23,7 @@ public class EventController {
         return EventHandlers.createEvent(event);
     }
 
-    @PostMapping("event/get")
+    @PostMapping("event/getevent")
     public EventDTO getEventbyName(@RequestBody SearchEventDTO event){
         return EventHandlers.getEventbyName(event);
     }
@@ -33,15 +33,6 @@ public class EventController {
         return EventHandlers.listEvents();
     }
 
-//    @PostMapping("subscribe/event")
-//    public ResponseEntity<?> subscribeEvent(@RequestBody SubscribeEventDTO event) {
-//        Map<String, String> response = new HashMap<>();
-//        if (EventHandlers.subscribeEvent(event)) {
-//            response.put("success", "Inscricão realizada com sucesso!");
-//        }
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
-
     @PostMapping("event/subscribe")
     public ResponseEntity<?> checkinEvent(@RequestBody SubscribeEventDTO eventCheckinData) {
         Map<String, String> response = new HashMap<>();
@@ -50,7 +41,6 @@ public class EventController {
         }
         response.put("success", "Inscrição realizada com sucesso!");
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
     @PostMapping("/event/listsubscribed")
