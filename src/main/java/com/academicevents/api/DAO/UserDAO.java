@@ -39,7 +39,6 @@ public class UserDAO {
             statement.setString(1, cpf);
             ResultSet result = statement.executeQuery();
             searchResult = result.next();
-            DB.closeConnection();
         } catch (SQLException e ) {
             throw new WrongCredentialsError("Credenciais erradas ou invalidas");
         }
@@ -52,45 +51,27 @@ public class UserDAO {
         String userType = user.getRole().getDisplayName();
         System.out.println(userType);
         String phoneQuery = "";
-        String query = "INSERT INTO " + userType + " (cpf, foto, nome, email, senha, rua, numero, bairro, cidade, estado, role) " + "VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?)";
-            try {
-                PreparedStatement statement =  conn.prepareStatement(query);
-                statement.setString(1, user.getCpf());
-                statement.setString(2, user.getFoto());
-                statement.setString(3, user.getNome());
-                statement.setString(4, user.getEmail());
-                statement.setString(5, user.getPassword());
-                statement.setString(6, user.getRua());
-                statement.setString(7, user.getNumero());
-                statement.setString(8, user.getBairro());
-                statement.setString(9, user.getCidade());
-                statement.setString(10, user.getEstado());
-                statement.setString(11, user.getRole().getDisplayName());
-                statement.execute();
-
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-                throw new RuntimeException(e);
-            }
-        System.out.println(userType);
-
-            phoneQuery = "INSERT INTO telefone_participante (telefone, cpfparticipante) VALUES (?, ?)";
-            if (userType.equals("administrador")) {
-
-                phoneQuery = "INSERT INTO telefoneadmin (telefone, cpf_admin) VALUES (?,?)";
-            } else if(userType.equals("professor")) {
-                phoneQuery = "INSERT INTO telefoneprof (telefone, cpf_prof) VALUES (?,?)";
-            }
-
-            try {
-                PreparedStatement preparedStatement = conn.prepareStatement(phoneQuery);
-                preparedStatement.setString(1, user.getTelefone());
-                preparedStatement.setString(2, user.getCpf());
-                preparedStatement.execute();
-                return true;
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+        String query = "INSERT INTO " + userType + " (cpf, foto, nome, telefone, email, senha, rua, numero, bairro, cidade, estado, role) " + "VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?)";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, user.getCpf());
+            statement.setString(2, user.getFoto());
+            statement.setString(3, user.getNome());
+            statement.setString(4, user.getTelefone());
+            statement.setString(5, user.getEmail());
+            statement.setString(6, user.getPassword());
+            statement.setString(7, user.getRua());
+            statement.setString(8, user.getNumero());
+            statement.setString(9, user.getBairro());
+            statement.setString(10, user.getCidade());
+            statement.setString(11, user.getEstado());
+            statement.setString(12, user.getRole().getDisplayName());
+            statement.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     public static User getUserByCpf(String cpf){
@@ -105,28 +86,24 @@ public class UserDAO {
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet result = statement.executeQuery();
                 if(result.next()){
-                DB.closeConnection();
                 return UserFactory.buildUser(result);
                 }
             } catch (SQLException e ) {throw new RuntimeException(e);}
         }
-        DB.closeConnection();
         return null;
     }
 
     public static boolean deleteUser(String cpf) {
         System.err.println("Cpf: " + cpf);
         conn = DB.getConnection();
-        String query = "DELETE FROM administrador WHERE cpf = ?";
+        String query = "DELETE FROM participante WHERE cpf = ?";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, cpf);
             statement.execute();
-            DB.closeConnection();
         } catch (SQLException e ) {
             throw new UserNotFoundError("Usuário não encontrado");
         }
-        DB.closeConnection();
         return true;
     }
 
@@ -140,9 +117,8 @@ public class UserDAO {
                 statement.execute();
             }
         } catch (SQLException e) {
-            DB.closeConnection();
             throw new RuntimeException(e);
-        } DB.closeConnection(); return true;
+        } return true;
     }
 
     public static boolean updateUserPassword(String userType, String userCpf, String newPassword){
@@ -153,23 +129,21 @@ public class UserDAO {
             PreparedStatement statement = conn.prepareStatement(query);
             if(statement.execute()){ success = true; }
         } catch (SQLException e) {
-            DB.closeConnection();
             throw new RuntimeException(e);
         }
-        DB.closeConnection();
         return success;
     }
 
 
     public static UserProfileDTO loadUserData(String cpf) {
         conn = DB.getConnection();
-        String query = "SELECT nome, email, foto, cpf, rua, numero, bairro, cidade, estado, role " +
+        String query = "SELECT nome, email, foto, telefone, cpf, rua, numero, bairro, cidade, estado, role " +
                 "FROM administrador WHERE cpf = ? " +
                 "UNION " +
-                "SELECT nome, email, foto, cpf, rua, numero, bairro, cidade, estado, role " +
+                "SELECT nome, email, foto, telefone, cpf, rua, numero, bairro, cidade, estado, role " +
                 "FROM participante WHERE cpf = ? " +
                 "UNION " +
-                "SELECT nome, email, foto, cpf, rua, numero, bairro, cidade, estado, role " +
+                "SELECT nome, email, foto, telefone, cpf, rua, numero, bairro, cidade, estado, role " +
                 "FROM professor WHERE cpf = ?";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
@@ -180,13 +154,11 @@ public class UserDAO {
             ResultSet result = statement.executeQuery();
             result.next();
 
-            String userTelefone = getTelfoneByCpf(cpf, result.getString("role"));
-
             return  new UserProfileDTO(
                     result.getString("nome"),
                     result.getString("email"),
                     result.getString("foto"),
-                    userTelefone,
+                    result.getString("telefone"),
                     result.getString("cpf"),
                     result.getString("rua"),
                     result.getString("numero"),
@@ -194,26 +166,6 @@ public class UserDAO {
                     result.getString("cidade"),
                     result.getString("estado"),
                     result.getString("role"));
-        } catch (SQLException e ) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public static String getTelfoneByCpf(String cpf, String userType) {
-        conn = DB.getConnection();
-        String query = switch (userType){
-            case "administrador" -> "SELECT telefone FROM " + "telefoneadmin" + " WHERE cpf_admin = ?";
-            case "professor" -> "SELECT telefone FROM " + "telefoneprof" + " WHERE cpf_prof = ?";
-            case "participante" -> "SELECT telefone FROM " + "telefone_participante" + " WHERE cpfparticipante = ?";
-            default -> throw new IllegalStateException("Unexpected value: " + userType);
-        };
-        try {
-            PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, cpf);
-            ResultSet result = statement.executeQuery();
-            result.next();
-            DB.closeConnection();
-            return result.getString("telefone");
         } catch (SQLException e ) {
             throw new RuntimeException(e);
         }

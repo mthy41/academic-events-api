@@ -17,13 +17,13 @@ public class UserFactory {
                 case "professor" -> ROLES.PROFESSOR;
                 default -> null;
             };
-            String userTelefone = UserDAO.getTelfoneByCpf(userSet.getString("cpf"), userRoleStr);
+//            String userTelefone = UserDAO.getTelfoneByCpf(userSet.getString("cpf"), userRoleStr);
 
             return new User(
                     userSet.getString("nome"),
                     userSet.getString("foto"),
                     userSet.getString("email"),
-                    userTelefone,
+                    userSet.getString("telefone"),
                     userSet.getString("senha"),
                     userSet.getString("cpf"),
                     userSet.getString("rua"),

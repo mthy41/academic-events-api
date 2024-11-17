@@ -63,7 +63,6 @@ public class WorkshopDAO {
             statement.setBoolean(8, workshop.isStatus());
             statement.setInt(9, workshop.getVagas());
             statement.execute();
-            DB.closeConnection();
             return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -93,7 +92,6 @@ public class WorkshopDAO {
                 workshops.add(workshop);
             }
 
-            DB.closeConnection();
             return workshops;
         } catch (SQLException e ) {
             throw new RuntimeException(e);
@@ -121,7 +119,6 @@ public class WorkshopDAO {
                 );
                 workshops.add(workshop);
             }
-            DB.closeConnection();
             return workshops;
         } catch (SQLException e ) {
             throw new RuntimeException(e);
