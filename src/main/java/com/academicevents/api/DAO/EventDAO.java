@@ -103,8 +103,8 @@ public class EventDAO {
             ResultSet result = statement.executeQuery();
             if(result.next()) {
                 return new EventDTO(
-                        result.getString("nome"),
                         result.getString("codigo"),
+                        result.getString("nome"),
                         result.getString("descricao"),
                         result.getString("instituicao"),
                         result.getDate("datainicio"),

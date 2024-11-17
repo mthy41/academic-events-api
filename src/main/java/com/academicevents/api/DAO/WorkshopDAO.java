@@ -50,6 +50,7 @@ public class WorkshopDAO {
 
     public static boolean saveWorkshop(WorkshopCreateDTO workshop) {
         Connection conn = DB.getConnection();
+
         String query = "INSERT INTO minicurso (codigo, banner, codigo_evento, titulo, descricao, datainicio, datafim, status, qtddparticipantes) VALUES (?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
