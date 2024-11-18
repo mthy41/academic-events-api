@@ -82,6 +82,7 @@ public class EventDAO {
 
 
     public static boolean deleteEvent(String nome) {
+        Connection connection = DB.getConnection();
         String query = "DELETE FROM evento WHERE nome = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
@@ -94,6 +95,7 @@ public class EventDAO {
     }
 
     public static EventDTO getEventByName(String nome) {
+        Connection connection = DB.getConnection();
         String query = "SELECT * FROM evento WHERE nome = ?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
