@@ -46,7 +46,7 @@ CREATE TABLE MiniCurso(
 	DataInicio DATE,
 	DataFim DATE,
 	Status BOOLEAN,
-	QTDDParticipantes INT,
+	vagas INT,
 
 	PRIMARY KEY(Codigo)
 );

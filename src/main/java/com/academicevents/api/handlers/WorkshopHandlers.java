@@ -4,14 +4,13 @@ import com.academicevents.api.DAO.EventDAO;
 import com.academicevents.api.DAO.UserDAO;
 import com.academicevents.api.DAO.WorkshopDAO;
 import com.academicevents.api.DTO.event.EventDTO;
-import com.academicevents.api.DTO.workshop.RemoveSubscriptionDTO;
-import com.academicevents.api.DTO.workshop.WorkshopCreateDTO;
-import com.academicevents.api.DTO.workshop.WorkshopInfoDTO;
-import com.academicevents.api.DTO.workshop.WorkshopListByEventName;
+import com.academicevents.api.DTO.workshop.*;
 import com.academicevents.api.controllers.workshop.SubscribeWorkshopDTO;
 import com.academicevents.api.customerrors.EventNotExistsError;
 import com.academicevents.api.customerrors.UserAlreadySubscribedError;
 import com.academicevents.api.customerrors.UserNotFoundError;
+import com.academicevents.api.models.User;
+import jdk.jfr.Event;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -86,12 +85,20 @@ public class WorkshopHandlers {
         if (!WorkshopDAO.subscribeWorkshop(workshop, workshopCode, eventCode)) {
             return false;
         }
+
+        WorkshopDAO.updateVagasDecrease(workshopCode);
+        WorkshopDAO.validateStatusByNumberOfSubscribers(workshopCode);
+
         return true;
     }
 
     public static boolean removeSubscription(RemoveSubscriptionDTO workshop) {
         if(!UserDAO.searchUserByCpf(workshop.getCpf())) {
             throw new UserNotFoundError("Usuário nao encontrado");
+        }
+
+        if (!EventDAO.searchEventByName(workshop.getNomeEvento())) {
+            throw new EventNotExistsError("Evento inexistente! Verifique o nome do evento e tente novamente.");
         }
 
         if (!WorkshopDAO.checkIfWorkshopExistsByName(workshop.getNomeWorkshop())) {
@@ -107,6 +114,23 @@ public class WorkshopHandlers {
         if (!WorkshopDAO.removeSubscription(workshopCode, workshop.getCpf())) {
             return false;
         }
+
+        WorkshopDAO.updateVagasIncrease(workshopCode);
+        WorkshopDAO.validateStatusByNumberOfSubscribers(workshopCode);
         return true;
+    }
+
+    public static ArrayList<User> listSubscribedWorkshop(ListSubscriptionsDTO workshop) {
+        if (!EventDAO.searchEventByName(workshop.getNomeEvento())) {
+            throw new EventNotExistsError("Evento inexistente! Verifique o nome do evento e tente novamente.");
+        }
+
+        if (!WorkshopDAO.searchWorkshopByName(workshop.getNomeWorkshop())) {
+            throw new EventNotExistsError("Minicurso inexistente! Verifique o nome do minicurso e tente novamente.");
+        }
+
+        String workshopCode = WorkshopDAO.getWorkshopCodeByName(workshop.getNomeWorkshop());
+        String eventCode = WorkshopDAO.getEventCodeByWorkshopName(workshop.getNomeWorkshop());
+        return WorkshopDAO.listSubscribedWorkshop(eventCode, workshopCode);
     }
 }

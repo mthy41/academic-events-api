@@ -3,6 +3,7 @@ package com.academicevents.api.DAO;
 import com.academicevents.api.DTO.workshop.WorkshopCreateDTO;
 import com.academicevents.api.DTO.workshop.WorkshopInfoDTO;
 import com.academicevents.api.controllers.workshop.SubscribeWorkshopDTO;
+import com.academicevents.api.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.Connection;
@@ -19,18 +20,15 @@ public class WorkshopDAO {
 
     }
 
-    public static ResultSet searchWorkshopByName(WorkshopCreateDTO workshop) {
+    public static boolean searchWorkshopByName(String workshopName) {
         Connection conn = DB.getConnection();
         String query = "SELECT * FROM minicurso WHERE titulo = ?";
 
         try {
             PreparedStatement statement = conn.prepareStatement(query);
-            statement.setString(1, workshop.getTitulo());
+            statement.setString(1, workshopName);
             ResultSet result = statement.executeQuery();
-            if(result.next()) {
-                return result;
-            }
-            return null;
+            return result.next();
         } catch (SQLException e ) {
             throw new RuntimeException(e);
         }
@@ -52,7 +50,7 @@ public class WorkshopDAO {
     public static boolean saveWorkshop(WorkshopCreateDTO workshop) {
         Connection conn = DB.getConnection();
 
-        String query = "INSERT INTO minicurso (codigo, banner, codigo_evento, titulo, descricao, datainicio, datafim, status, qtddparticipantes) VALUES (?,?,?,?,?,?,?,?,?)";
+        String query = "INSERT INTO minicurso (codigo, banner, codigo_evento, titulo, descricao, datainicio, datafim, status, vagas) VALUES (?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, workshop.getCodigo());
@@ -87,7 +85,7 @@ public class WorkshopDAO {
                         result.getDate("datainicio"),
                         result.getDate("datafim"),
                         result.getBoolean("status"),
-                        result.getInt("qtddparticipantes")
+                        result.getInt("vagas")
                 );
 
 
@@ -117,7 +115,7 @@ public class WorkshopDAO {
                         result.getDate("datainicio"),
                         result.getDate("datafim"),
                         result.getBoolean("status"),
-                        result.getInt("qtddparticipantes")
+                        result.getInt("vagas")
                 );
                 workshops.add(workshop);
             }
@@ -213,5 +211,93 @@ public class WorkshopDAO {
         } catch (SQLException e ) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void updateVagasDecrease(String workshopCode) {
+        Connection conn = DB.getConnection();
+        String query = "UPDATE minicurso SET vagas = vagas - 1 WHERE codigo = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, workshopCode);
+            statement.execute();
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static int getNumbersOfVacancies(String workshopCode) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT vagas FROM minicurso WHERE codigo = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, workshopCode);
+            ResultSet result = statement.executeQuery();
+            if(result.next()) {
+                return result.getInt("vagas");
+            }
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+        return 0;
+    }
+
+
+    public static void validateStatusByNumberOfSubscribers(String workshopCode) {
+        Connection conn = DB.getConnection();
+        int vagas = getNumbersOfVacancies(workshopCode);
+        if (vagas == 0) {
+            String query = "UPDATE minicurso SET status = false WHERE codigo = ?";
+            try {
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, workshopCode);
+                statement.execute();
+            } catch (SQLException e ) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            String query = "UPDATE minicurso SET status = true WHERE codigo = ?";
+            try {
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, workshopCode);
+                statement.execute();
+            } catch (SQLException e ) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void updateVagasIncrease(String workshopCode) {
+        Connection conn = DB.getConnection();
+        String query = "UPDATE minicurso SET vagas = vagas + 1 WHERE codigo = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, workshopCode);
+            statement.execute();
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static ArrayList<User> listSubscribedWorkshop(String codigoEvento, String codigoMinicurso) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT cpf_participante FROM participa_mc WHERE codigo_ev = ? AND codigo_mc = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, codigoEvento);
+            statement.setString(2, codigoMinicurso);
+            ResultSet result = statement.executeQuery();
+            ArrayList<User> users = new ArrayList<>();
+            while(result.next()) {
+                String cpf = result.getString("cpf_participante");
+                System.out.println(cpf);
+                User user = UserDAO.getUserByCpf(cpf);
+                user.setPassword(""); // gambiarra para não retornar a senha
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+
     }
 }
