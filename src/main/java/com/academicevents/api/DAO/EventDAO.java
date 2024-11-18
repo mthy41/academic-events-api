@@ -10,10 +10,7 @@ import com.academicevents.api.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -217,7 +214,7 @@ public class EventDAO {
         return false;
     }
 
-    public static boolean checkinEventWithCPFAndEventName(String codEvento, String CPFparticipante, String codigoPalestra) {
+    public static boolean subscribeEventWithCPFAndEventName(String codEvento, String CPFparticipante, String codigoPalestra) {
         Connection conn = DB.getConnection();
         String query = "INSERT INTO participa_palestra (codigo_ev, cpf_participante, codigo_palestra) VALUES (?,?,?)";
         try {
@@ -228,7 +225,6 @@ public class EventDAO {
             preparedStatement.execute();
             return true;
         } catch (SQLException e) {
-            System.out.println(e);
             throw new CheckinEventError("Erro inserindo o participante na lista de checkin");
         }
     }
@@ -297,5 +293,38 @@ public class EventDAO {
             throw new RuntimeException(e);
         }
         return false;
+    }
+
+    public static boolean checkIfUserHasDoneCheckin(String codigoPalestra, String cpfParticipante) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT * FROM chekin_palestra WHERE codigo_palestra = ? AND cpf_participante = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, codigoPalestra);
+            preparedStatement.setString(2, cpfParticipante);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
+
+    public static boolean checkinEventWithCPFAndEventName(String eventCode, String cpfParticipante, String lectureCode) {
+        Connection conn = DB.getConnection();
+        String query = "INSERT INTO chekin_palestra (codigo_ev, cpf_participante, codigo_palestra, data_chekin) VALUES (?,?,?,?)";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, eventCode);
+            preparedStatement.setString(2, cpfParticipante);
+            preparedStatement.setString(3, lectureCode);
+            preparedStatement.setDate(4, new Date(System.currentTimeMillis()));
+            preparedStatement.execute();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

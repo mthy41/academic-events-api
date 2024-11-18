@@ -34,6 +34,16 @@ public class EventController {
     }
 
     @PostMapping("event/subscribe")
+    public ResponseEntity<?> subscribeEvent(@RequestBody SubscribeEventDTO eventCheckinData) {
+        Map<String, String> response = new HashMap<>();
+        if (!EventHandlers.subscribeEvent(eventCheckinData)) {
+            throw new CheckinEventError("Erro ao realizar checkin. Consulte os dados e tente novamente.");
+        }
+        response.put("success", "Inscrição realizada com sucesso!");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("/event/checkin")
     public ResponseEntity<?> checkinEvent(@RequestBody SubscribeEventDTO eventCheckinData) {
         Map<String, String> response = new HashMap<>();
         if (!EventHandlers.checkinEvent(eventCheckinData)) {

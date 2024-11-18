@@ -31,9 +31,6 @@ public class User {
         this.foto = foto;
     }
 
-    public User(String cpfParticipante, String nome, String email, String telefone, String rua, String numero, String bairro, String cidade, String estado, String foto, String role) {
-    }
-
     public String getTelefone() {
         return telefone;
     }

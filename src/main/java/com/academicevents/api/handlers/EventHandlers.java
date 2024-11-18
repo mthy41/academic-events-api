@@ -96,7 +96,7 @@ public class EventHandlers {
         return false;
     }
 
-    public static boolean checkinEvent(SubscribeEventDTO eventCheckinDataDTO) {
+    public static boolean subscribeEvent(SubscribeEventDTO eventCheckinDataDTO) {
         if (!UserHandlers.checkIfUserExistsByCpf(eventCheckinDataDTO.getCpfParticipante())) {
             throw new UserNotFoundError("CPF não encontrado.");
         }
@@ -106,8 +106,7 @@ public class EventHandlers {
         }
 
         String eventCode = EventDAO.searchCodeByName(eventCheckinDataDTO.getNomeEvento());
-        System.out.println("codigo do evento");
-        System.out.println(eventCode);
+
         if(!EventDAO.checkIfLectureExistsByEventCode(eventCode)) {
             throw new CheckinEventError("Não foi possível encontrar a lista de presenca pelo codigo do evento.");
         }
@@ -115,7 +114,7 @@ public class EventHandlers {
 
         String lectureCode = EventDAO.getLectureCode(eventCode);
 
-        if(!EventDAO.checkinEventWithCPFAndEventName(eventCode, eventCheckinDataDTO.getCpfParticipante(), lectureCode)) {
+        if(!EventDAO.subscribeEventWithCPFAndEventName(eventCode, eventCheckinDataDTO.getCpfParticipante(), lectureCode)) {
             throw new CheckinEventError("Houve algum erro ao realizar o checkin.");
         }
         return true;
@@ -145,5 +144,28 @@ public class EventHandlers {
             throw new CheckinEventError("Houve algum erro ao realizar o checkin.");
         }
         return true;
+    }
+
+    public static boolean checkinEvent(SubscribeEventDTO eventCheckinData) {
+        if (!UserHandlers.checkIfUserExistsByCpf(eventCheckinData.getCpfParticipante())) {
+            throw new UserNotFoundError("CPF não encontrado.");
+        }
+
+        if (!EventDAO.checkIfEventExistsByName(eventCheckinData.getNomeEvento())) {
+            throw new EventNotExistsError("Evento inexistente! Verifique o nome do evento e tente novamente.");
+        }
+
+        String eventCode = EventDAO.searchCodeByName(eventCheckinData.getNomeEvento());
+        String lectureCode = EventDAO.getLectureCode(eventCode);
+
+        if (EventDAO.checkIfUserHasDoneCheckin(lectureCode, eventCheckinData.getCpfParticipante())) {
+            throw new UserNotFoundError("Participante já realizou o checkin.");
+        }
+
+        if(!EventDAO.checkinEventWithCPFAndEventName(eventCode, eventCheckinData.getCpfParticipante(), lectureCode)) {
+            throw new CheckinEventError("Houve algum erro ao realizar o checkin.");
+        }
+        return true;
+
     }
 }
