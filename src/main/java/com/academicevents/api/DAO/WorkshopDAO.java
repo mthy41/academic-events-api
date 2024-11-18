@@ -140,12 +140,13 @@ public class WorkshopDAO {
         }
     }
 
-    public static boolean checkIfUserIsAlreadySubscribed(String cpf) {
+    public static boolean checkIfUserIsAlreadySubscribed(String cpf, String codigoMinicurso) {
         Connection conn = DB.getConnection();
-        String query = "SELECT * FROM participa_mc WHERE cpf_participante = ?";
+        String query = "SELECT * FROM participa_mc WHERE cpf_participante = ? AND codigo_mc = ?";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, cpf);
+            statement.setString(2, codigoMinicurso);
             ResultSet result = statement.executeQuery();
             return result.next();
         } catch (SQLException e ) {
@@ -198,5 +199,19 @@ public class WorkshopDAO {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    public static boolean removeSubscription(String workshopCode, String cpf) {
+        Connection conn = DB.getConnection();
+        String query = "DELETE FROM participa_mc WHERE codigo_mc = ? AND cpf_participante = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, workshopCode);
+            statement.setString(2, cpf);
+            statement.execute();
+            return true;
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
     }
 }

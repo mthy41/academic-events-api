@@ -267,4 +267,35 @@ public class EventDAO {
         }
         return users;
     }
+
+    public static boolean removeSubscription(String eventCode, String cpfParticipante) {
+        Connection conn = DB.getConnection();
+        String query = "DELETE FROM participa_palestra WHERE codigo_ev = ? AND cpf_participante = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, eventCode);
+            preparedStatement.setString(2, cpfParticipante);
+            preparedStatement.execute();
+            return true;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static boolean checkIfUserIsSubscribed(String nomeEvento, String cpfParticipante) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT * FROM participa_palestra WHERE codigo_ev = ? AND cpf_participante = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, nomeEvento);
+            preparedStatement.setString(2, cpfParticipante);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return false;
+    }
 }

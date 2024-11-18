@@ -126,4 +126,24 @@ public class EventHandlers {
 
         return EventDAO.listSubscribedParticipansEvent(eventCode);
     }
+
+    public static boolean removeSubscription(SubscribeEventDTO eventCheckinData) {
+        if (!UserHandlers.checkIfUserExistsByCpf(eventCheckinData.getCpfParticipante())) {
+            throw new UserNotFoundError("CPF não encontrado.");
+        }
+
+        if (!EventDAO.checkIfEventExistsByName(eventCheckinData.getNomeEvento())) {
+            throw new EventNotExistsError("Evento inexistente! Verifique o nome do evento e tente novamente.");
+        }
+
+        if (!EventDAO.checkIfUserIsSubscribed(eventCheckinData.getNomeEvento(), eventCheckinData.getCpfParticipante())) {
+            throw new UserNotFoundError("Participante nao esta inscrito.");
+        }
+
+        String eventCode = EventDAO.searchCodeByName(eventCheckinData.getNomeEvento());
+        if(!EventDAO.removeSubscription(eventCode, eventCheckinData.getCpfParticipante())) {
+            throw new CheckinEventError("Houve algum erro ao realizar o checkin.");
+        }
+        return true;
+    }
 }

@@ -43,6 +43,16 @@ public class EventController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @DeleteMapping("/event/removesubscription")
+    public ResponseEntity<?> removeSubscription(@RequestBody SubscribeEventDTO eventCheckinData) {
+        Map<String, String> response = new HashMap<>();
+        if (!EventHandlers.removeSubscription(eventCheckinData)) {
+            throw new CheckinEventError("Erro ao remover inscrição. Consulte os dados e tente novamente.");
+        }
+        response.put("success", "Inscrição removida com sucesso!");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @PostMapping("/event/listsubscribed")
     public ResponseEntity<?> listSubscribedEvents(ListParticipantsByEventNameDTO event) {
         ArrayList<User> subscribedParticipantsEvent = EventHandlers.listSubscribedParticipansEvent(event.getNomeEvento());

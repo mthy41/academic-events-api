@@ -4,6 +4,7 @@ import com.academicevents.api.DAO.EventDAO;
 import com.academicevents.api.DAO.UserDAO;
 import com.academicevents.api.DAO.WorkshopDAO;
 import com.academicevents.api.DTO.event.EventDTO;
+import com.academicevents.api.DTO.workshop.RemoveSubscriptionDTO;
 import com.academicevents.api.DTO.workshop.WorkshopCreateDTO;
 import com.academicevents.api.DTO.workshop.WorkshopInfoDTO;
 import com.academicevents.api.DTO.workshop.WorkshopListByEventName;
@@ -75,13 +76,35 @@ public class WorkshopHandlers {
             throw new EventNotExistsError("Minicurso inexistente! Verifique o nome do minicurso e tente novamente.");
         }
 
-        if (WorkshopDAO.checkIfUserIsAlreadySubscribed(workshop.getCpf())) {
-           throw new UserAlreadySubscribedError("Usuário ja inscrito no minicurso");
+        String workshopCode = WorkshopDAO.getWorkshopCodeByName(workshop.getNomeWorkshop());
+
+        if (WorkshopDAO.checkIfUserIsAlreadySubscribed(workshop.getCpf(), workshopCode)) {
+            throw new UserAlreadySubscribedError("Usuário ja inscrito no minicurso");
         }
 
         String eventCode = WorkshopDAO.getEventCodeByWorkshopName(workshop.getNomeWorkshop());
-        String workshopCode = WorkshopDAO.getWorkshopCodeByName(workshop.getNomeWorkshop());
         if (!WorkshopDAO.subscribeWorkshop(workshop, workshopCode, eventCode)) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean removeSubscription(RemoveSubscriptionDTO workshop) {
+        if(!UserDAO.searchUserByCpf(workshop.getCpf())) {
+            throw new UserNotFoundError("Usuário nao encontrado");
+        }
+
+        if (!WorkshopDAO.checkIfWorkshopExistsByName(workshop.getNomeWorkshop())) {
+            throw new EventNotExistsError("Minicurso inexistente! Verifique o nome do minicurso e tente novamente.");
+        }
+
+        String workshopCode = WorkshopDAO.getWorkshopCodeByName(workshop.getNomeWorkshop());
+
+        if (!WorkshopDAO.checkIfUserIsAlreadySubscribed(workshop.getCpf(), workshopCode)) {
+           throw new UserNotFoundError("Usuário não inscrito no minicurso");
+        }
+
+        if (!WorkshopDAO.removeSubscription(workshopCode, workshop.getCpf())) {
             return false;
         }
         return true;
