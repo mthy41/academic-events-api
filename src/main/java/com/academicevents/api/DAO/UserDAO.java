@@ -1,6 +1,7 @@
 package com.academicevents.api.DAO;
 
 import com.academicevents.api.DTO.user.UserProfileDTO;
+import com.academicevents.api.DTO.workshop.WorkshopInfoDTO;
 import com.academicevents.api.builders.UserFactory;
 import com.academicevents.api.customerrors.UserNotFoundError;
 import com.academicevents.api.customerrors.WrongCredentialsError;
@@ -13,10 +14,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 public class UserDAO {
@@ -167,6 +165,23 @@ public class UserDAO {
                     result.getString("estado"),
                     result.getString("role"));
         } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static ArrayList<WorkshopInfoDTO> listSubscribedWorkshop(String cpf) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT codigo_ev, codigo_mc FROM participa_mc WHERE cpf_participante = ?";
+        ArrayList<WorkshopInfoDTO> workshopInfo = new ArrayList<>();
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, cpf);
+            ResultSet result = statement.executeQuery();
+            while(result.next()) {
+                workshopInfo.add(WorkshopDAO.getWorkshopInfoByCode(result.getString("codigo_mc")));
+            }
+            return workshopInfo;
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }

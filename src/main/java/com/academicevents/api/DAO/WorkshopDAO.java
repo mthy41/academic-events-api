@@ -300,4 +300,29 @@ public class WorkshopDAO {
         }
 
     }
+
+    public static WorkshopInfoDTO getWorkshopInfoByCode(String codigoMc) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT * FROM minicurso WHERE codigo = ?";
+        try {
+            PreparedStatement statement = conn.prepareStatement(query);
+            statement.setString(1, codigoMc);
+            ResultSet result = statement.executeQuery();
+            if(result.next()) {
+                WorkshopInfoDTO workshop = new WorkshopInfoDTO(
+                        result.getString("titulo"),
+                        result.getString("descricao"),
+                        result.getString("banner"),
+                        result.getDate("datainicio"),
+                        result.getDate("datafim"),
+                        result.getBoolean("status"),
+                        result.getInt("vagas")
+                );
+                return workshop;
+            }
+        } catch (SQLException e ) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }

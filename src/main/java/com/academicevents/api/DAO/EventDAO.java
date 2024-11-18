@@ -327,4 +327,51 @@ public class EventDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public static ArrayList<EventListDTO> listSubscribedEvents(String cpf) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT codigo_ev FROM participa_palestra WHERE cpf_participante = ?";
+        ArrayList<EventListDTO> events = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, cpf);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                EventListDTO event = EventDAO.getEventByCode(resultSet.getString("codigo_ev"));
+                events.add(event);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return events;
+    }
+
+    private static EventListDTO getEventByCode(String codigoEv) {
+        Connection conn = DB.getConnection();
+        String query = "SELECT * FROM evento WHERE codigo = ?";
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, codigoEv);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return new EventListDTO(
+                        resultSet.getString("nome"),
+                        resultSet.getString("instituicao"),
+                        resultSet.getString("descricao"),
+                        resultSet.getDate("dataInicio"),
+                        resultSet.getDate("dataFim"),
+                        resultSet.getString("banner"),
+                        resultSet.getString("miniatura"),
+                        resultSet.getString("rua"),
+                        resultSet.getString("numero"),
+                        resultSet.getString("bairro"),
+                        resultSet.getString("cidade"),
+                        resultSet.getString("estado"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }
+

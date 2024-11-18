@@ -1,7 +1,12 @@
 package com.academicevents.api.handlers;
 
+import com.academicevents.api.DAO.EventDAO;
 import com.academicevents.api.DAO.UserDAO;
+import com.academicevents.api.DAO.WorkshopDAO;
+import com.academicevents.api.DTO.event.EventListDTO;
+import com.academicevents.api.DTO.event.SearchEventDTO;
 import com.academicevents.api.DTO.user.DeleteUserDTO;
+import com.academicevents.api.DTO.workshop.WorkshopInfoDTO;
 import com.academicevents.api.customerrors.*;
 import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
@@ -165,5 +170,19 @@ public class UserHandlers {
 
         response.put("success", "Senha atualizada com sucesso.");
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    public static ArrayList<EventListDTO> listSubscribedEvents(String cpf) {
+        if (!UserDAO.searchUserByCpf(cpf)) {
+            throw new UserNotFoundError("Usuário nao encontrado");
+        }
+        return EventDAO.listSubscribedEvents(cpf);
+    }
+
+    public static ArrayList<WorkshopInfoDTO> listSubscribedWorkshop(String cpf) {
+        if (!UserDAO.searchUserByCpf(cpf)) {
+            throw new UserNotFoundError("Usuário nao encontrado");
+        }
+        return UserDAO.listSubscribedWorkshop(cpf);
     }
 }
