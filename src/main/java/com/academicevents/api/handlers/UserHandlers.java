@@ -28,9 +28,20 @@ public class UserHandlers {
             return  new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
+        if(!DataComplianceHandler.checkCpf(user.getCpf())){
+            response.put("error", "Erro ao persistir usuário: Cpf inserido inválido.");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+
+        if(!DataComplianceHandler.checkPassword(user.getPassword())){
+            response.put("error", "Erro ao persistir usuário: Senha inserida inválida.");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+
         user.setPassword(HashPasswordHandler.hashPassword(user.getPassword()));
+
         if(UserDAO.searchUserByCpf(user.getCpf())) {
-            throw new UserAlreadyExistsError("Usuário já existente");
+            throw new UserAlreadyExistsError("Cpf inserido já está cadastrado.");
         }
 
         if(UserDAO.saveUser(user)) {

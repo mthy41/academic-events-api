@@ -26,6 +26,7 @@ public class DataComplianceHandler {
     }
 
     public static boolean checkCpf(String userCpf){
+        if(userCpf == null || userCpf.isEmpty()){ return false; }
         return userCpf.replaceAll("\\D", "").length() == 11;
     }
 
