@@ -94,7 +94,8 @@ public class UserDAO {
     public static boolean deleteUser(String cpf) {
         System.err.println("Cpf: " + cpf);
         conn = DB.getConnection();
-        String query = "DELETE FROM participante WHERE cpf = ?";
+        User bufferedUser = getUserByCpf(cpf);
+        String query = "DELETE FROM "+bufferedUser.getRole().getDisplayName()+" WHERE cpf = ?";
         try {
             PreparedStatement statement = conn.prepareStatement(query);
             statement.setString(1, cpf);
