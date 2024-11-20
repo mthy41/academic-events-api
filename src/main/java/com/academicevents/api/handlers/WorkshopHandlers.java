@@ -24,23 +24,26 @@ public class WorkshopHandlers {
         Map<String, String> response = new HashMap<>();
 
         if (WorkshopDAO.checkWorkshopExistsByName(workshop)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Minicurso já existente!");
+            response.put("error", "Erro ao criar o minicurso. Minicurso com esse nome já existe.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
         EventDTO evento = EventDAO.getEventByName(workshop.getNomeEvento());
 
         if(evento == null) {
-            return new ResponseEntity<>("Erro ao criar o minicurso. Evento inexistente, verifique o nome do evento.", HttpStatus.BAD_REQUEST);
+            response.put("error", "Erro ao criar o minicurso. Evento inexistente, verifique o nome do evento.");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
         workshop.setCodigoEvento(evento.getCodigo());
         workshop.setCodigo(UUID.randomUUID().toString());
 
         if(!WorkshopDAO.saveWorkshop(workshop)) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar minicurso!");
+            response.put("error", "Erro ao criar o minicurso. Tente novamente.");
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        return ResponseEntity.status(HttpStatus.OK).body("Minicurso criado com sucesso!");
+        response.put("success", "Minicurso criado com sucesso!");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     public static ResponseEntity<?> listWorkshop(WorkshopListByEventName workshopInfo) {
