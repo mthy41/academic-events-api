@@ -22,6 +22,7 @@ public class WorkshopController {
 
     @PostMapping("/workshop/create")
     public ResponseEntity<?> createWorkshop(WorkshopCreateDTO workshop) {
+        System.out.println(workshop);
         Map<String, String> response = new HashMap<>();
         if (!WorkshopHandlers.createWorkshop(workshop)) {
             response.put("error", "Erro ao criar o minicurso. Tente novamente.");
