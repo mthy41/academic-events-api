@@ -10,7 +10,6 @@ import com.academicevents.api.customerrors.EventNotExistsError;
 import com.academicevents.api.customerrors.UserAlreadySubscribedError;
 import com.academicevents.api.customerrors.UserNotFoundError;
 import com.academicevents.api.models.User;
-import jdk.jfr.Event;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -20,30 +19,25 @@ import java.util.Map;
 import java.util.UUID;
 
 public class WorkshopHandlers {
-    public static ResponseEntity<?> createWorkshop(WorkshopCreateDTO workshop) {
-        Map<String, String> response = new HashMap<>();
-
+    public static boolean createWorkshop(WorkshopCreateDTO workshop) {
         if (WorkshopDAO.checkWorkshopExistsByName(workshop)) {
-            response.put("error", "Erro ao criar o minicurso. Minicurso com esse nome já existe.");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            throw new EventNotExistsError("Minicurso com esse nome já existe.");
         }
 
         EventDTO evento = EventDAO.getEventByName(workshop.getNomeEvento());
         System.out.println(evento);
         if(evento == null) {
-            response.put("error", "Erro ao criar o minicurso. Evento inexistente, verifique o nome do evento.");
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            throw new EventNotExistsError("Nome do evento inexistente: " + workshop.getNomeEvento());
         }
 
         workshop.setCodigoEvento(evento.getCodigo());
         workshop.setCodigo(UUID.randomUUID().toString());
 
         if(!WorkshopDAO.saveWorkshop(workshop)) {
-            response.put("error", "Erro ao criar o minicurso. Tente novamente.");
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+            return false;
         }
-        response.put("success", "Minicurso criado com sucesso!");
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+
+        return true;
     }
 
     public static ResponseEntity<?> listWorkshop(WorkshopListByEventName workshopInfo) {
