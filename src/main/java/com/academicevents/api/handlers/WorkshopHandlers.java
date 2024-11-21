@@ -29,7 +29,7 @@ public class WorkshopHandlers {
         }
 
         EventDTO evento = EventDAO.getEventByName(workshop.getNomeEvento());
-
+        System.out.println(evento);
         if(evento == null) {
             response.put("error", "Erro ao criar o minicurso. Evento inexistente, verifique o nome do evento.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
