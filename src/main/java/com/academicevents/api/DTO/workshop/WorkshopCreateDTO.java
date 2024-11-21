@@ -36,6 +36,18 @@ public class WorkshopCreateDTO {
         this.vagas = vagas;
     }
 
+
+    public WorkshopCreateDTO(LocalDate datainicio, LocalDate datafim, String nomeEvento, String banner, String titulo, String descricao, boolean status, int vagas) {
+        this.datainicio = datainicio;
+        this.datafim = datafim;
+        this.nomeEvento = nomeEvento;
+        this.banner = banner;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.status = status;
+        this.vagas = vagas;
+    }
+
     public String getCodigo() {
         return codigo;
     }
@@ -115,5 +127,21 @@ public class WorkshopCreateDTO {
 
     public void setVagas(int vagas) {
         this.vagas = vagas;
+    }
+
+    @Override
+    public String toString() {
+        return "WorkshopCreateDTO{" +
+                "codigo='" + codigo + '\'' +
+                ", codigoEvento='" + codigoEvento + '\'' +
+                ", datainicio=" + datainicio +
+                ", datafim=" + datafim +
+                ", nomeEvento='" + nomeEvento + '\'' +
+                ", banner='" + banner + '\'' +
+                ", titulo='" + titulo + '\'' +
+                ", descricao='" + descricao + '\'' +
+                ", status=" + status +
+                ", vagas=" + vagas +
+                '}';
     }
 }
