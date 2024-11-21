@@ -20,6 +20,7 @@ import java.util.UUID;
 
 public class WorkshopHandlers {
     public static boolean createWorkshop(WorkshopCreateDTO workshop) {
+        System.out.println(workshop);
         if (WorkshopDAO.checkWorkshopExistsByName(workshop)) {
             throw new EventNotExistsError("Minicurso com esse nome já existe.");
         }
