@@ -2,7 +2,7 @@ package com.academicevents.api.DTO.workshop;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.time.LocalDate;
+import java.sql.Date;
 
 public class WorkshopCreateDTO {
     @JsonIgnore
@@ -11,8 +11,8 @@ public class WorkshopCreateDTO {
     private String codigoEvento;
 
 
-    private LocalDate datainicio;
-    private LocalDate datafim;
+    private Date datainicio;
+    private Date datafim;
 
     private String nomeEvento;
     private String banner;
@@ -23,7 +23,7 @@ public class WorkshopCreateDTO {
 
     public WorkshopCreateDTO() { }
 
-    public WorkshopCreateDTO(String codigo, String codigoEvento, LocalDate datainicio, LocalDate datafim, String nomeEvento, String banner, String titulo, String descricao, boolean status, int vagas) {
+    public WorkshopCreateDTO(String codigo, String codigoEvento, Date datainicio, Date datafim, String nomeEvento, String banner, String titulo, String descricao, boolean status, int vagas) {
         this.codigo = codigo;
         this.codigoEvento = codigoEvento;
         this.datainicio = datainicio;
@@ -37,9 +37,18 @@ public class WorkshopCreateDTO {
     }
 
 
-    public WorkshopCreateDTO(LocalDate datainicio, LocalDate datafim, String nomeEvento, String banner, String titulo, String descricao, boolean status, int vagas) {
+    public WorkshopCreateDTO(Date datainicio, Date datafim, String nomeEvento, String banner, String titulo, String descricao, boolean status, int vagas) {
         this.datainicio = datainicio;
         this.datafim = datafim;
+        this.nomeEvento = nomeEvento;
+        this.banner = banner;
+        this.titulo = titulo;
+        this.descricao = descricao;
+        this.status = status;
+        this.vagas = vagas;
+    }
+
+    public WorkshopCreateDTO(String nomeEvento, String banner, String titulo, String descricao, boolean status, int vagas) {
         this.nomeEvento = nomeEvento;
         this.banner = banner;
         this.titulo = titulo;
@@ -64,19 +73,19 @@ public class WorkshopCreateDTO {
         this.codigoEvento = codigoEvento;
     }
 
-    public LocalDate getDatainicio() {
+    public Date getDatainicio() {
         return datainicio;
     }
 
-    public void setDatainicio(LocalDate datainicio) {
+    public void setDatainicio(Date datainicio) {
         this.datainicio = datainicio;
     }
 
-    public LocalDate getDatafim() {
+    public Date getDatafim() {
         return datafim;
     }
 
-    public void setDatafim(LocalDate datafim) {
+    public void setDatafim(Date datafim) {
         this.datafim = datafim;
     }
 

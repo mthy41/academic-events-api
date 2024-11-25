@@ -37,7 +37,6 @@ public class WorkshopHandlers {
         if(!WorkshopDAO.saveWorkshop(workshop)) {
             return false;
         }
-
         return true;
     }
 
