@@ -67,8 +67,7 @@ public class UserDAO {
             statement.execute();
             return true;
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);
+            throw new WrongCredentialsError(e.getMessage());
         }
     }
 

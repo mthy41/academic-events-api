@@ -25,7 +25,7 @@ public class UserHandlers {
 
         if(user.getTelefone() == null || user.getTelefone().isEmpty()){
             response.put("error", "Erro ao persistir usuário: Telefone inserido inválido.");
-            return  new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
         user.setPassword(HashPasswordHandler.hashPassword(user.getPassword()));

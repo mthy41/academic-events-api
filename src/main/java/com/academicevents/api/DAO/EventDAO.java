@@ -228,7 +228,9 @@ public class EventDAO {
             preparedStatement.execute();
             return true;
         } catch (SQLException e) {
-            throw new CheckinEventError("Erro inserindo o participante na lista de checkin");
+            System.err.println(e);
+//            throw new CheckinEventError("Erro inserindo o participante na lista de checkin");
+            return false;
         }
     }
 
