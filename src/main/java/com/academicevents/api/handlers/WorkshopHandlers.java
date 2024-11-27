@@ -130,4 +130,5 @@ public class WorkshopHandlers {
         String eventCode = WorkshopDAO.getEventCodeByWorkshopName(workshop.getNomeWorkshop());
         return WorkshopDAO.listSubscribedWorkshop(eventCode, workshopCode);
     }
+
 }

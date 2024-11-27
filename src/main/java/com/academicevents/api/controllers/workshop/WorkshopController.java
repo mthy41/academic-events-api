@@ -1,5 +1,6 @@
 package com.academicevents.api.controllers.workshop;
 
+import com.academicevents.api.DTO.user.UserCpf;
 import com.academicevents.api.DTO.workshop.ListSubscriptionsDTO;
 import com.academicevents.api.DTO.workshop.RemoveSubscriptionDTO;
 import com.academicevents.api.DTO.workshop.WorkshopCreateDTO;
@@ -28,6 +29,7 @@ public class WorkshopController {
         response.put("success", "Minicurso criado com sucesso!");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
 
     @PostMapping("workshop/listworkshops")
     public ResponseEntity<?> listWorkshop(WorkshopListByEventName workshopName) {
