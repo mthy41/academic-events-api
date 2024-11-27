@@ -219,6 +219,7 @@ public class EventDAO {
     public static boolean subscribeEventWithCPFAndEventName(String codEvento, String CPFparticipante, String codigoPalestra) {
         Connection conn = DB.getConnection();
         String query = "INSERT INTO participa_palestra (codigo_ev, cpf_participante, codigo_palestra) VALUES (?,?,?)";
+        System.out.println(codEvento + " " + CPFparticipante + " " + codigoPalestra);
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, codEvento);
