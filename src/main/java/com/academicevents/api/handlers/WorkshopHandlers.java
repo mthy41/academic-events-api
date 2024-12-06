@@ -41,7 +41,7 @@ public class WorkshopHandlers {
     }
 
     public static ResponseEntity<?> listWorkshop(WorkshopListByEventName workshopInfo) {
-        Map<String, ArrayList<WorkshopInfoDTO>> response = new HashMap<>();
+        HashMap<String, ArrayList<WorkshopInfoDTO>> response = new HashMap<>();
         String eventCode = EventDAO.searchCodeByName(workshopInfo.getNomeEvento());
 
         if (eventCode == null) {
