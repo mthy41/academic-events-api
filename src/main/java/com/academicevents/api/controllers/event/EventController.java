@@ -65,9 +65,12 @@ public class EventController {
     }
 
     @PostMapping("/event/listsubscribed")
-    public ResponseEntity<?> listSubscribedEvents(ListParticipantsByEventNameDTO event) {
+    public ResponseEntity<?> listSubscribedEvents(@RequestBody ListParticipantsByEventNameDTO event) {
+        System.out.println("aquiiii");
+        System.out.println(event.getNomeEvento());
         HashMap<String, ArrayList<User>> response = new HashMap<>();
         ArrayList<User> subscribedParticipantsEvent = EventHandlers.listSubscribedParticipansEvent(event.getNomeEvento());
+
         response.put("participantes", subscribedParticipantsEvent);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
