@@ -1,10 +1,8 @@
 package com.academicevents.api.controllers.event;
 
 import com.academicevents.api.DTO.SubscribeEventDTO;
-import com.academicevents.api.DTO.event.DeleteEventDTO;
-import com.academicevents.api.DTO.event.EventDTO;
-import com.academicevents.api.DTO.event.ListParticipantsByEventNameDTO;
-import com.academicevents.api.DTO.event.SearchEventDTO;
+import com.academicevents.api.DTO.event.*;
+import com.academicevents.api.DTO.user.UserCpf;
 import com.academicevents.api.customerrors.CheckinEventError;
 import com.academicevents.api.handlers.EventHandlers;
 import com.academicevents.api.models.User;
