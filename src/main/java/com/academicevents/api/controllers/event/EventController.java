@@ -66,8 +66,10 @@ public class EventController {
 
     @PostMapping("/event/listsubscribed")
     public ResponseEntity<?> listSubscribedEvents(ListParticipantsByEventNameDTO event) {
+        HashMap<String, ArrayList<User>> response = new HashMap<>();
         ArrayList<User> subscribedParticipantsEvent = EventHandlers.listSubscribedParticipansEvent(event.getNomeEvento());
-        return new ResponseEntity<>(subscribedParticipantsEvent, HttpStatus.OK);
+        response.put("participantes", subscribedParticipantsEvent);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/event")
