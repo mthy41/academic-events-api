@@ -219,6 +219,7 @@ public class EventDAO {
     public static boolean subscribeEventWithCPFAndEventName(String codEvento, String CPFparticipante, String codigoPalestra) {
         Connection conn = DB.getConnection();
         String query = "INSERT INTO participa_palestra (codigo_ev, cpf_participante, codigo_palestra) VALUES (?,?,?)";
+        System.out.println(codEvento + " " + CPFparticipante + " " + codigoPalestra);
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, codEvento);
@@ -227,7 +228,9 @@ public class EventDAO {
             preparedStatement.execute();
             return true;
         } catch (SQLException e) {
-            throw new CheckinEventError("Erro inserindo o participante na lista de checkin");
+            System.err.println(e);
+//            throw new CheckinEventError("Erro inserindo o participante na lista de checkin");
+            return false;
         }
     }
 

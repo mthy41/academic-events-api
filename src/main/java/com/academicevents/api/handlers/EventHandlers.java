@@ -110,7 +110,6 @@ public class EventHandlers {
         if(!EventDAO.checkIfLectureExistsByEventCode(eventCode)) {
             throw new CheckinEventError("Não foi possível encontrar a lista de presenca pelo codigo do evento.");
         }
-        System.out.println("tudo ok!");
 
         String lectureCode = EventDAO.getLectureCode(eventCode);
 
