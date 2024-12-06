@@ -36,6 +36,7 @@ public class WorkshopDAO {
 
     public static boolean checkWorkshopExistsByName(WorkshopCreateDTO workshop) {
         Connection conn = DB.getConnection();
+        System.out.println(workshop);
         String query = "SELECT * FROM minicurso WHERE titulo = ?";
         try {
             PreparedStatement statement = conn.prepareStatement(query);

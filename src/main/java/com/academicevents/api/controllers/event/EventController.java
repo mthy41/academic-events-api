@@ -20,6 +20,7 @@ import java.util.Map;
 public class EventController {
     @PostMapping("/event/create")
     public ResponseEntity<?> createEvent(@RequestBody EventDTO event) {
+        System.out.println(event);
         return EventHandlers.createEvent(event);
     }
 

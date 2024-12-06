@@ -8,21 +8,25 @@ import com.academicevents.api.handlers.WorkshopHandlers;
 import com.academicevents.api.models.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
 @RestController
 public class WorkshopController {
 
     @PostMapping("/workshop/create")
-    public ResponseEntity<?> createWorkshop(WorkshopCreateDTO workshop) {
-        return WorkshopHandlers.createWorkshop(workshop);
+    public ResponseEntity<?> createWorkshop(@RequestBody WorkshopCreateDTO workshop) {
+        System.out.println(workshop);
+        Map<String, String> response = new HashMap<>();
+        if (!WorkshopHandlers.createWorkshop(workshop)) {
+            response.put("error", "Erro ao criar o minicurso. Tente novamente.");
+        }
+        response.put("success", "Minicurso criado com sucesso!");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("workshop/listworkshops")

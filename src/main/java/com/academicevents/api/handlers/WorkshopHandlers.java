@@ -10,7 +10,6 @@ import com.academicevents.api.customerrors.EventNotExistsError;
 import com.academicevents.api.customerrors.UserAlreadySubscribedError;
 import com.academicevents.api.customerrors.UserNotFoundError;
 import com.academicevents.api.models.User;
-import jdk.jfr.Event;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -20,27 +19,25 @@ import java.util.Map;
 import java.util.UUID;
 
 public class WorkshopHandlers {
-    public static ResponseEntity<?> createWorkshop(WorkshopCreateDTO workshop) {
-        Map<String, String> response = new HashMap<>();
-
+    public static boolean createWorkshop(WorkshopCreateDTO workshop) {
+        System.out.println(workshop);
         if (WorkshopDAO.checkWorkshopExistsByName(workshop)) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Minicurso já existente!");
+            throw new EventNotExistsError("Minicurso com esse nome já existe.");
         }
 
         EventDTO evento = EventDAO.getEventByName(workshop.getNomeEvento());
-
+        System.out.println(evento);
         if(evento == null) {
-            return new ResponseEntity<>("Erro ao criar o minicurso. Evento inexistente, verifique o nome do evento.", HttpStatus.BAD_REQUEST);
+            throw new EventNotExistsError("Nome do evento inexistente: " + workshop.getNomeEvento());
         }
 
         workshop.setCodigoEvento(evento.getCodigo());
         workshop.setCodigo(UUID.randomUUID().toString());
 
         if(!WorkshopDAO.saveWorkshop(workshop)) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar minicurso!");
+            return false;
         }
-
-        return ResponseEntity.status(HttpStatus.OK).body("Minicurso criado com sucesso!");
+        return true;
     }
 
     public static ResponseEntity<?> listWorkshop(WorkshopListByEventName workshopInfo) {
