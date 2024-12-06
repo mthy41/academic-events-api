@@ -32,7 +32,7 @@ public class WorkshopController {
 
 
     @PostMapping("workshop/listworkshops")
-    public ResponseEntity<?> listWorkshop(WorkshopListByEventName workshopName) {
+    public ResponseEntity<?> listWorkshop(@RequestBody WorkshopListByEventName workshopName) {
         return WorkshopHandlers.listWorkshop(workshopName);
     }
 
