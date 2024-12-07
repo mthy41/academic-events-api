@@ -1,10 +1,8 @@
 package com.academicevents.api.controllers.event;
 
 import com.academicevents.api.DTO.SubscribeEventDTO;
-import com.academicevents.api.DTO.event.DeleteEventDTO;
-import com.academicevents.api.DTO.event.EventDTO;
-import com.academicevents.api.DTO.event.ListParticipantsByEventNameDTO;
-import com.academicevents.api.DTO.event.SearchEventDTO;
+import com.academicevents.api.DTO.event.*;
+import com.academicevents.api.DTO.user.UserCpf;
 import com.academicevents.api.customerrors.CheckinEventError;
 import com.academicevents.api.handlers.EventHandlers;
 import com.academicevents.api.models.User;
@@ -65,9 +63,14 @@ public class EventController {
     }
 
     @PostMapping("/event/listsubscribed")
-    public ResponseEntity<?> listSubscribedEvents(ListParticipantsByEventNameDTO event) {
+    public ResponseEntity<?> listSubscribedEvents(@RequestBody ListParticipantsByEventNameDTO event) {
+        System.out.println("aquiiii");
+        System.out.println(event.getNomeEvento());
+        HashMap<String, ArrayList<User>> response = new HashMap<>();
         ArrayList<User> subscribedParticipantsEvent = EventHandlers.listSubscribedParticipansEvent(event.getNomeEvento());
-        return new ResponseEntity<>(subscribedParticipantsEvent, HttpStatus.OK);
+
+        response.put("participantes", subscribedParticipantsEvent);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/event")

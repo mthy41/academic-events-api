@@ -1,8 +1,11 @@
 package com.academicevents.api.DTO.event;
 
-public class ListParticipantsByEventNameDTO {
-    private String nomeEvento;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
+public class ListParticipantsByEventNameDTO {
+    public String nomeEvento;
+
+    @JsonCreator
     public ListParticipantsByEventNameDTO(String nomeEvento) {
         this.nomeEvento = nomeEvento;
     }

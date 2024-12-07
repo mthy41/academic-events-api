@@ -56,6 +56,7 @@ public class WorkshopHandlers {
 
         workshops.forEach(workshop -> workshop.setEvento(workshopInfo.getNomeEvento()));
         response.put("workshops", workshops);
+        System.out.println(workshops.get(0));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
