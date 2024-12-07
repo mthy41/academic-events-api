@@ -17,7 +17,7 @@ public class DataComplianceHandler {
      * bytes fica: 5242880B.
      */
     private static final long MAX_PFP_IMAGE_SIZE = 5242880;
-    private static final int MAX_PFP_WIDTH = 1024;
+    private static final int MAX_PFP_WIDTH = 4096;
 
     public static boolean checkUserName(String userName){
         if(userName.length() > USER_NAME_MAX_LENGTH){ return false; }
